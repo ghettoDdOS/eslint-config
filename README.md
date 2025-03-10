@@ -109,6 +109,8 @@ Add the following settings to your `.vscode/settings.json`:
 }
 ```
 
+</details>
+
 ## Customization
 
 Normally you only need to import the `config` preset:
