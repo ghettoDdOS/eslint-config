@@ -8,6 +8,7 @@ export async function disables(): Promise<TypedFlatConfigItem[]> {
       files: [`**/scripts/${GLOB_SRC}`],
       name: 'disables/scripts',
       rules: {
+        'antfu/no-top-level-await': 'off',
         'no-console': 'off',
         'ts/explicit-function-return-type': 'off',
       },
