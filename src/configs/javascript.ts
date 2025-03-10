@@ -6,7 +6,7 @@ import type {
 
 import globals from 'globals'
 
-import { pluginUnusedImports } from '../plugins'
+import { pluginAntfu, pluginUnusedImports } from '../plugins'
 
 export async function javascript(
   options: OptionsIsInEditor & OptionsOverrides = {},
@@ -42,6 +42,7 @@ export async function javascript(
     {
       name: 'javascript/rules',
       plugins: {
+        'antfu': pluginAntfu,
         'unused-imports': pluginUnusedImports,
       },
       rules: {
@@ -49,6 +50,9 @@ export async function javascript(
           'error',
           { enforceForClassMembers: true, setWithoutGet: true },
         ],
+
+        'antfu/no-top-level-await': 'error',
+
         'array-callback-return': 'error',
         'block-scoped-var': 'error',
         'constructor-super': 'error',

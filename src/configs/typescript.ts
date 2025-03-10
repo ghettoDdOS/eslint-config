@@ -11,6 +11,7 @@ import type {
 import process from 'node:process'
 
 import { GLOB_MARKDOWN, GLOB_TS, GLOB_TSX } from '../globs'
+import { pluginAntfu } from '../plugins'
 import { interopDefault, renameRules } from '../utils'
 
 export async function typescript(
@@ -106,7 +107,8 @@ export async function typescript(
       // Install the plugins without globs, so they can be configured separately.
       name: 'typescript/setup',
       plugins: {
-        ts: pluginTs as any,
+        antfu: pluginAntfu,
+        ts: pluginTs,
       },
     },
     // assign type-aware parser for type-aware files and type-unaware parser for the rest

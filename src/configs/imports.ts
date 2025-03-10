@@ -1,6 +1,6 @@
 import type { OptionsStylistic, TypedFlatConfigItem } from '../types'
 
-import { pluginImport } from '../plugins'
+import { pluginAntfu, pluginImport } from '../plugins'
 
 export async function imports(
   options: OptionsStylistic = {},
@@ -11,9 +11,14 @@ export async function imports(
     {
       name: 'imports/rules',
       plugins: {
+        antfu: pluginAntfu,
         import: pluginImport,
       },
       rules: {
+        'antfu/import-dedupe': 'error',
+        'antfu/no-import-dist': 'error',
+        'antfu/no-import-node-modules-by-path': 'error',
+
         'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
         'import/first': 'error',
         'import/no-duplicates': 'error',

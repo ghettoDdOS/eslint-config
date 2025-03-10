@@ -4,6 +4,7 @@ import type {
   TypedFlatConfigItem,
 } from '../types'
 
+import { pluginAntfu } from '../plugins'
 import { interopDefault } from '../utils'
 
 export const StylisticConfigDefaults: StylisticConfig = {
@@ -45,12 +46,18 @@ export async function stylistic(
     {
       name: 'stylistic/rules',
       plugins: {
+        antfu: pluginAntfu,
         style: pluginStylistic,
       },
       rules: {
         ...config.rules,
 
-        'curly': ['error', 'all'],
+        'antfu/consistent-chaining': 'error',
+        'antfu/consistent-list-newline': 'error',
+
+        'antfu/curly': 'error',
+        'antfu/if-newline': 'error',
+        'antfu/top-level-function': 'error',
 
         'style/generator-star-spacing': [
           'error',
