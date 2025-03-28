@@ -7,6 +7,13 @@
   "author": "ghettoDdOS <pen.egor2002@gamil.com> (https://github.com/ghettoDdOS/)",
   "license": "MIT",
   "homepage": "https://github.com/ghettoDdOS/eslint-config",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ghettoDdOS/eslint-config.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ghettoDdOS/eslint-config/issues"
+  },
   "keywords": [
     "eslint-config"
   ],
