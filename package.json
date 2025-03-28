@@ -1,7 +1,7 @@
 {
   "name": "@ghettoddos/eslint-config",
   "type": "module",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "packageManager": "pnpm@10.7.0",
   "description": "ghettoDdOS ESLint config",
   "author": "ghettoDdOS <pen.egor2002@gamil.com> (https://github.com/ghettoDdOS/)",
