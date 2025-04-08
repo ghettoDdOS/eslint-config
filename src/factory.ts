@@ -22,6 +22,7 @@ import {
   markdown,
   node,
   perfectionist,
+  pnpm,
   react,
   sortPackageJson,
   sortTsconfig,
@@ -85,6 +86,7 @@ export function config(
     componentExts = [],
     gitignore: enableGitignore = true,
     jsx: enableJsx = true,
+    pnpm: enableCatalogs = false,
     react: enableReact = ReactPackages.some(i => isPackageExists(i)),
     regexp: enableRegexp = true,
     typescript: enableTypeScript = isPackageExists('typescript'),
@@ -221,6 +223,12 @@ export function config(
       }),
       sortPackageJson(),
       sortTsconfig(),
+    )
+  }
+
+  if (enableCatalogs) {
+    configs.push(
+      pnpm(),
     )
   }
 
