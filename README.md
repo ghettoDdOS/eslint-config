@@ -111,6 +111,67 @@ Add the following settings to your `.vscode/settings.json`:
 
 </details>
 
+<details>
+<summary>🟦 Zed support</summary>
+
+<br>
+
+Add the following settings to your `.zed/settings.json`:
+
+```jsonc
+{
+  // Disable the default formatter, use eslint instead
+  "format_on_save": "on",
+
+  // Auto fix
+  "formatter": {
+    "code_actions": {
+      "source.fixAll.eslint": true,
+      "source.organizeImports": false
+    }
+  },
+
+  // Silent the stylistic rules in you IDE, but still auto fix them
+  "lsp": {
+    "eslint": {
+      "settings": {
+        "rulesCustomizations": [
+          { "rule": "style/*", "severity": "off", "fixable": true },
+          { "rule": "format/*", "severity": "off", "fixable": true },
+          { "rule": "*-indent", "severity": "off", "fixable": true },
+          { "rule": "*-spacing", "severity": "off", "fixable": true },
+          { "rule": "*-spaces", "severity": "off", "fixable": true },
+          { "rule": "*-order", "severity": "off", "fixable": true },
+          { "rule": "*-dangle", "severity": "off", "fixable": true },
+          { "rule": "*-newline", "severity": "off", "fixable": true },
+          { "rule": "*quotes", "severity": "off", "fixable": true },
+          { "rule": "*semi", "severity": "off", "fixable": true }
+        ]
+      }
+    }
+  },
+
+  // Enable eslint for all supported languages
+  "languages": {
+    "JavaScript": { "language_servers": ["...", "eslint"] },
+    "TypeScript": { "language_servers": ["...", "eslint"] },
+    "TSX": { "language_servers": ["...", "eslint"] },
+    "Vue.js": { "language_servers": ["...", "eslint"] },
+    "HTML": { "language_servers": ["...", "eslint"] },
+    "Markdown": { "language_servers": ["...", "eslint"] },
+    "JSON": { "language_servers": ["...", "eslint"] },
+    "JSONC": { "language_servers": ["...", "eslint"] },
+    "YAML": { "language_servers": ["...", "eslint"] },
+    "TOML": { "language_servers": ["...", "eslint"] },
+    "XML": { "language_servers": ["...", "eslint"] },
+    "CSS": { "language_servers": ["...", "eslint"] },
+    "SCSS": { "language_servers": ["...", "eslint"] }
+  }
+}
+```
+
+</details>
+
 ## Customization
 
 Normally you only need to import the `config` preset:
