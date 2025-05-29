@@ -19,7 +19,9 @@ import {
   javascript,
   jsonc,
   jsx,
+  jsxA11y,
   markdown,
+  next,
   node,
   perfectionist,
   pnpm,
@@ -86,6 +88,8 @@ export function config(
     componentExts = [],
     gitignore: enableGitignore = true,
     jsx: enableJsx = true,
+    jsxA11y: enableJsxA11y = ReactPackages.some(i => isPackageExists(i)),
+    next: enableNext = isPackageExists('next'),
     pnpm: enableCatalogs = false,
     react: enableReact = ReactPackages.some(i => isPackageExists(i)),
     regexp: enableRegexp = true,
@@ -202,6 +206,22 @@ export function config(
         ...typescriptOptions,
         overrides: getOverrides(options, 'react'),
         tsconfigPath,
+      }),
+    )
+  }
+
+  if (enableJsxA11y) {
+    configs.push(
+      jsxA11y({
+        overrides: getOverrides(options, 'jsxA11y'),
+      }),
+    )
+  }
+
+  if (enableNext) {
+    configs.push(
+      next({
+        overrides: getOverrides(options, 'next'),
       }),
     )
   }

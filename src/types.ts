@@ -279,6 +279,20 @@ export interface OptionsConfig
   react?: boolean | OptionsOverrides
 
   /**
+   * Enable jsxA11y rules.
+   *
+   * @default auto-detect based on the react dependencies
+   */
+  jsxA11y?: boolean | OptionsOverrides
+
+  /**
+   * Enable next rules.
+   *
+   * @default auto-detect based on the dependencies
+   */
+  next?: boolean | OptionsOverrides
+
+  /**
    * Enable unocss rules.
    *
    * Requires installing:

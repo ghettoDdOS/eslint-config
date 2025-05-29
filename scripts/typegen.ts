@@ -11,7 +11,9 @@ import {
   javascript,
   jsonc,
   jsx,
+  jsxA11y,
   markdown,
+  next,
   node,
   perfectionist,
   pnpm,
@@ -53,6 +55,8 @@ const configs = await combine(
   unicorn(),
   unocss(),
   yaml(),
+  next(),
+  jsxA11y(),
 )
 
 const configNames = configs.map(i => i.name).filter(Boolean) as string[]
