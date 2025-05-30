@@ -115,7 +115,7 @@ export async function fsd(
   }
 
   if (enableLayersSlices) {
-    ensurePackages(['eslint-plugin-boundaries'])
+    await ensurePackages(['eslint-plugin-boundaries'])
 
     const [pluginBoundaries] = await Promise.all([
       interopDefault(import('eslint-plugin-boundaries')),
