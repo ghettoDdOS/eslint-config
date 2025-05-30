@@ -1,3 +1,6 @@
+import type { Linter } from 'eslint'
+
+import type { RuleOptions } from './typegen'
 import type { Awaitable, TypedFlatConfigItem } from './types'
 
 import process from 'node:process'
@@ -141,4 +144,32 @@ export function isInGitHooksOrLintStaged(): boolean {
     || process.env.VSCODE_GIT_COMMAND
     || process.env.npm_lifecycle_script?.startsWith('lint-staged')
   )
+}
+
+export type ResolvedOptions<T> = T extends boolean ? never : NonNullable<T>
+
+export function resolveSubOptions<
+  C extends Record<string, any>,
+  K extends keyof C,
+>(
+  options: C,
+  key: K,
+): ResolvedOptions<C[K]> {
+  return typeof options[key] === 'boolean'
+    ? ({} as any)
+    : options[key] || ({} as any)
+}
+
+export function getOverrides<
+  C extends Record<string, any>,
+  K extends keyof C,
+>(
+  options: C,
+  key: K,
+): Partial<Linter.RulesRecord & RuleOptions> {
+  const sub = resolveSubOptions(options, key)
+  return {
+    ...(options.overrides as any)?.[key],
+    ...('overrides' in sub ? sub.overrides : {}),
+  }
 }

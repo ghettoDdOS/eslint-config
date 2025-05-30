@@ -209,6 +209,29 @@ export interface OptionsUnoCSS extends OptionsOverrides {
   strict?: boolean
 }
 
+export interface OptionsFSDPublicApi extends OptionsOverrides {
+  /**
+   * Without SegmentsAPI / InnerAPI restrictions.
+   * @default true
+   */
+  lite?: boolean
+}
+
+export interface OptionsFSD {
+  /**
+   * FSD Public API rules.
+   * @see https://github.com/feature-sliced/eslint-config/tree/master/rules/public-api
+   * @default true
+   */
+  publicApi?: boolean | OptionsFSDPublicApi
+  /**
+   * FSD Layers slices rules.
+   * @see https://github.com/feature-sliced/eslint-config/tree/master/rules/layers-slices
+   * @default true
+   */
+  layersSlices?: boolean | OptionsOverrides
+}
+
 export interface OptionsConfig
   extends OptionsComponentExts,
   OptionsProjectType {
@@ -350,6 +373,14 @@ export interface OptionsConfig
    * @default false
    */
   pnpm?: boolean
+
+  /**
+   * Enable FSD rules.
+   *
+   * @see https://feature-sliced.github.io/
+   * @default false
+   */
+  fsd?: boolean | OptionsFSD
 
   /**
    * Use external formatters to format files.

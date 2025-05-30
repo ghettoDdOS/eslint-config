@@ -8,6 +8,7 @@ import {
   comments,
   effector,
   formatters,
+  fsd,
   imports,
   javascript,
   jsonc,
@@ -59,6 +60,7 @@ const configs = await combine(
   next(),
   jsxA11y(),
   effector(),
+  fsd(),
 )
 
 const configNames = configs.map(i => i.name).filter(Boolean) as string[]

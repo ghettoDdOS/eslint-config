@@ -1,6 +1,5 @@
 import type { Linter } from 'eslint'
 
-import type { RuleOptions } from './typegen'
 import type {
   Awaitable,
   ConfigNames,
@@ -15,6 +14,7 @@ import {
   comments,
   disables,
   effector,
+  fsd,
   ignores,
   imports,
   javascript,
@@ -39,7 +39,12 @@ import {
 import { formatters } from './configs/formatters'
 import { regexp } from './configs/regexp'
 import { NextJsPackages, ReactPackages } from './constants'
-import { interopDefault, isInEditorEnv } from './utils'
+import {
+  getOverrides,
+  interopDefault,
+  isInEditorEnv,
+  resolveSubOptions,
+} from './utils'
 
 const flatConfigProps = [
   'name',
@@ -88,6 +93,7 @@ export function config(
     autoRenamePlugins = true,
     componentExts = [],
     effector: enableEffector = isPackageExists('effector'),
+    fsd: enableFsd = false,
     gitignore: enableGitignore = true,
     jsx: enableJsx = true,
     jsxA11y: enableJsxA11y = isUsingReact,
@@ -228,6 +234,14 @@ export function config(
     )
   }
 
+  if (enableFsd) {
+    configs.push(
+      fsd({
+        ...resolveSubOptions(options, 'fsd'),
+      }),
+    )
+  }
+
   if (enableEffector) {
     configs.push(
       effector({
@@ -340,26 +354,4 @@ export function config(
   }
 
   return composer
-}
-
-export type ResolvedOptions<T> = T extends boolean ? never : NonNullable<T>
-
-export function resolveSubOptions<K extends keyof OptionsConfig>(
-  options: OptionsConfig,
-  key: K,
-): ResolvedOptions<OptionsConfig[K]> {
-  return typeof options[key] === 'boolean'
-    ? ({} as any)
-    : options[key] || ({} as any)
-}
-
-export function getOverrides<K extends keyof OptionsConfig>(
-  options: OptionsConfig,
-  key: K,
-): Partial<Linter.RulesRecord & RuleOptions> {
-  const sub = resolveSubOptions(options, key)
-  return {
-    ...(options.overrides as any)?.[key],
-    ...('overrides' in sub ? sub.overrides : {}),
-  }
 }
