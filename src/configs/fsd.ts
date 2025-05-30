@@ -1,6 +1,5 @@
 import type { OptionsFSD, TypedFlatConfigItem } from '../types'
 
-import { pluginComments } from '../plugins'
 import { ensurePackages, getOverrides, interopDefault, resolveSubOptions } from '../utils'
 
 const FS_LAYERS = [
@@ -79,14 +78,7 @@ export async function fsd(
     publicApi: enablePublicApi = true,
   } = options
 
-  const configs: TypedFlatConfigItem[] = [
-    {
-      name: 'fsd/setup',
-      plugins: {
-        'eslint-comments': pluginComments,
-      },
-    },
-  ]
+  const configs: TypedFlatConfigItem[] = []
 
   if (enablePublicApi) {
     const { lite = true } = resolveSubOptions(options, 'publicApi')
