@@ -14,6 +14,7 @@ import { isPackageExists } from 'local-pkg'
 import {
   comments,
   disables,
+  effector,
   ignores,
   imports,
   javascript,
@@ -37,6 +38,7 @@ import {
 } from './configs'
 import { formatters } from './configs/formatters'
 import { regexp } from './configs/regexp'
+import { NextJsPackages, ReactPackages } from './constants'
 import { interopDefault, isInEditorEnv } from './utils'
 
 const flatConfigProps = [
@@ -48,8 +50,6 @@ const flatConfigProps = [
   'rules',
   'settings',
 ] satisfies (keyof TypedFlatConfigItem)[]
-
-const ReactPackages = ['react', 'nest']
 
 export const defaultPluginRenaming = {
   '@eslint-react': 'react',
@@ -83,15 +83,17 @@ export function config(
     | Linter.Config[]
   >[]
 ): FlatConfigComposer<TypedFlatConfigItem, ConfigNames> {
+  const isUsingReact = ReactPackages.some(i => isPackageExists(i))
   const {
     autoRenamePlugins = true,
     componentExts = [],
+    effector: enableEffector = isPackageExists('effector'),
     gitignore: enableGitignore = true,
     jsx: enableJsx = true,
-    jsxA11y: enableJsxA11y = ReactPackages.some(i => isPackageExists(i)),
-    next: enableNext = isPackageExists('next'),
+    jsxA11y: enableJsxA11y = isUsingReact,
+    next: enableNext = NextJsPackages.some(i => isPackageExists(i)),
     pnpm: enableCatalogs = false,
-    react: enableReact = ReactPackages.some(i => isPackageExists(i)),
+    react: enableReact = isUsingReact,
     regexp: enableRegexp = true,
     typescript: enableTypeScript = isPackageExists('typescript'),
     unicorn: enableUnicorn = true,
@@ -222,6 +224,15 @@ export function config(
     configs.push(
       next({
         overrides: getOverrides(options, 'next'),
+      }),
+    )
+  }
+
+  if (enableEffector) {
+    configs.push(
+      effector({
+        ...resolveSubOptions(options, 'effector'),
+        overrides: getOverrides(options, 'effector'),
       }),
     )
   }

@@ -43,6 +43,7 @@
     "@prettier/plugin-xml": "^3.4.1",
     "@unocss/eslint-plugin": ">=0.50.0",
     "eslint": "^9.10.0",
+    "eslint-plugin-effector": "^0.15.0",
     "eslint-plugin-format": ">=0.1.0",
     "eslint-plugin-jsx-a11y": "^6.10.2"
   },
@@ -54,6 +55,9 @@
       "optional": true
     },
     "@unocss/eslint-plugin": {
+      "optional": true
+    },
+    "eslint-plugin-effector": {
       "optional": true
     },
     "eslint-plugin-format": {
@@ -103,6 +107,7 @@
     "@unocss/eslint-plugin": "66.1.0-beta.3",
     "bumpp": "^10.1.1",
     "eslint": "^9.27.0",
+    "eslint-plugin-effector": "^0.15.0",
     "eslint-plugin-format": "^1.0.1",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-typegen": "^2.2.0",

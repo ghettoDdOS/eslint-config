@@ -6,6 +6,7 @@ import { builtinRules } from 'eslint/use-at-your-own-risk'
 import {
   combine,
   comments,
+  effector,
   formatters,
   imports,
   javascript,
@@ -57,6 +58,7 @@ const configs = await combine(
   yaml(),
   next(),
   jsxA11y(),
+  effector(),
 )
 
 const configNames = configs.map(i => i.name).filter(Boolean) as string[]

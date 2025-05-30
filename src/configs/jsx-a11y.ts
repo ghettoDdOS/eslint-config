@@ -2,11 +2,8 @@ import type { OptionsOverrides, TypedFlatConfigItem } from '../types'
 
 import { isPackageExists } from 'local-pkg'
 
+import { NextJsPackages } from '../constants'
 import { ensurePackages, interopDefault } from '../utils'
-
-const NextJsPackages = ['next']
-
-const isUsingNext = NextJsPackages.some(i => isPackageExists(i))
 
 export async function jsxA11y(options: OptionsOverrides = {}): Promise<TypedFlatConfigItem[]> {
   const { overrides = {} } = options
@@ -16,6 +13,8 @@ export async function jsxA11y(options: OptionsOverrides = {}): Promise<TypedFlat
   const [pluginJsxA11y] = await Promise.all([
     interopDefault(import('eslint-plugin-jsx-a11y')),
   ] as const)
+
+  const isUsingNext = NextJsPackages.some(i => isPackageExists(i))
 
   return [
     {

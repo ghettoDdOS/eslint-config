@@ -99,6 +99,33 @@ export interface OptionsUnicorn extends OptionsOverrides {
   allRecommended?: boolean
 }
 
+export interface OptionsEffector extends OptionsOverrides {
+  /**
+   * Include react rules.
+   *
+   * @default auto-detect based on the dependencies
+   */
+  react?: boolean
+  /**
+   * Include patronum rules.
+   *
+   * @default auto-detect based on the dependencies
+   */
+  patronum?: boolean
+  /**
+   * Include future rules.
+   *
+   * @default false
+   */
+  future?: boolean
+  /**
+   * Include scope rules.
+   *
+   * @default false
+   */
+  scope?: boolean
+}
+
 export interface OptionsTypeScriptParserOptions {
   /**
    * Additional parser options for TypeScript.
@@ -291,6 +318,16 @@ export interface OptionsConfig
    * @default auto-detect based on the dependencies
    */
   next?: boolean | OptionsOverrides
+
+  /**
+   * Enable effector rules.
+   *
+   * Requires installing:
+   * - `eslint-plugin-effector`
+   *
+   * @default auto-detect based on the dependencies
+   */
+  effector?: boolean | OptionsEffector
 
   /**
    * Enable unocss rules.

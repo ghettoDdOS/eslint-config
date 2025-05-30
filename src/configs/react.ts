@@ -9,18 +9,13 @@ import type {
 
 import { isPackageExists } from 'local-pkg'
 
+import {
+  NextJsPackages,
+  ReactRefreshAllowConstantExportPackages,
+  ReactRouterPackages,
+} from '../constants'
 import { GLOB_MARKDOWN, GLOB_SRC, GLOB_TS, GLOB_TSX } from '../globs'
 import { interopDefault } from '../utils'
-
-// react refresh
-const ReactRefreshAllowConstantExportPackages = ['vite']
-const ReactRouterPackages = [
-  '@react-router/node',
-  '@react-router/react',
-  '@react-router/serve',
-  '@react-router/dev',
-]
-const NextJsPackages = ['next']
 
 export async function react(
   options: OptionsTypeScriptParserOptions &
