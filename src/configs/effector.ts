@@ -1,5 +1,6 @@
 import type { OptionsEffector, TypedFlatConfigItem } from '../types'
 
+import { fixupPluginRules } from '@eslint/compat'
 import { isPackageExists } from 'local-pkg'
 
 import { ReactPackages } from '../constants'
@@ -26,7 +27,7 @@ export async function effector(
     {
       name: 'effector/setup',
       plugins: {
-        effector: pluginEffector,
+        effector: fixupPluginRules(pluginEffector),
       },
     },
     {
