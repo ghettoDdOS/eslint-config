@@ -295,7 +295,7 @@ Since flat config requires us to explicitly provide the plugin names (instead of
 
 | New Prefix | Original Prefix        | Source Plugin                                                                              |
 | ---------- | ---------------------- | ------------------------------------------------------------------------------------------ |
-| `import/*` | `import-x/*`           | [eslint-plugin-import-x](https://github.com/un-es/eslint-plugin-import-x)                  |
+| `import/*` | `import-lite/*`        | [eslint-plugin-import-lite](https://github.com/9romise/eslint-plugin-import-lite)          |
 | `node/*`   | `n/*`                  | [eslint-plugin-n](https://github.com/eslint-community/eslint-plugin-n)                     |
 | `yaml/*`   | `yml/*`                | [eslint-plugin-yml](https://github.com/ota-meshi/eslint-plugin-yml)                        |
 | `ts/*`     | `@typescript-eslint/*` | [@typescript-eslint/eslint-plugin](https://github.com/typescript-eslint/typescript-eslint) |
@@ -392,9 +392,9 @@ export default config()
   // some configs before the main config
   ()
   // overrides any named configs
-  .override('imports', {
+  .override('stylistic/rules', {
     rules: {
-      'import/order': ['error', { 'newlines-between': 'always' }],
+      'style/generator-star-spacing': ['error', { after: true, before: false }],
     },
   })
   // rename plugin prefixes

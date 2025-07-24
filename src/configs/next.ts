@@ -1,22 +1,38 @@
-import type { OptionsOverrides, TypedFlatConfigItem } from '../types'
+import type { OptionsFiles, OptionsOverrides, TypedFlatConfigItem } from '../types'
 
+import { GLOB_SRC } from '../globs'
 import { ensurePackages, interopDefault } from '../utils'
 
-export async function next(options: OptionsOverrides = {}): Promise<TypedFlatConfigItem[]> {
-  const { overrides = {} } = options
+export async function next(
+  options: OptionsOverrides & OptionsFiles = {},
+): Promise<TypedFlatConfigItem[]> {
+  const {
+    files = [GLOB_SRC],
+    overrides = {},
+  } = options
 
   await ensurePackages(['@next/eslint-plugin-next'])
 
-  const [pluginNext] = await Promise.all([
-    interopDefault(import('@next/eslint-plugin-next')),
-  ] as const)
+  const pluginNextJS = await interopDefault(import('@next/eslint-plugin-next'))
 
   return [
     {
-      name: 'next/rules',
+      name: 'next/setup',
       plugins: {
-        next: pluginNext,
+        next: pluginNextJS,
       },
+    },
+    {
+      files,
+      languageOptions: {
+        parserOptions: {
+          ecmaFeatures: {
+            jsx: true,
+          },
+        },
+        sourceType: 'module',
+      },
+      name: 'next/rules',
       rules: {
         'next/google-font-display': 'warn',
         'next/google-font-preconnect': 'warn',
@@ -41,6 +57,11 @@ export async function next(options: OptionsOverrides = {}): Promise<TypedFlatCon
         'next/no-unwanted-polyfillio': 'warn',
 
         ...overrides,
+      },
+      settings: {
+        react: {
+          version: 'detect',
+        },
       },
     },
   ]

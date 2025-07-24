@@ -8,7 +8,6 @@ import {
   comments,
   effector,
   formatters,
-  fsd,
   imports,
   javascript,
   jsonc,
@@ -27,6 +26,7 @@ import {
   typescript,
   unicorn,
   unocss,
+  vue,
   yaml,
 } from '../src'
 
@@ -56,11 +56,11 @@ const configs = await combine(
   typescript(),
   unicorn(),
   unocss(),
+  vue(),
   yaml(),
   next(),
   jsxA11y(),
   effector(),
-  fsd(),
 )
 
 const configNames = configs.map(i => i.name).filter(Boolean) as string[]

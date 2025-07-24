@@ -2,6 +2,7 @@ import type { StylisticCustomizeOptions } from '@stylistic/eslint-plugin'
 import type { ParserOptions } from '@typescript-eslint/parser'
 import type { Linter } from 'eslint'
 import type { FlatGitignoreOptions } from 'eslint-config-flat-gitignore'
+import type { Options as VueBlocksOptions } from 'eslint-processor-vue-blocks'
 
 import type { ConfigNames, RuleOptions } from './typegen'
 import type { VendoredPrettierOptions } from './vendor/prettier-types'
@@ -12,10 +13,7 @@ export interface Rules extends RuleOptions {}
 
 export type { ConfigNames }
 
-export type TypedFlatConfigItem = Omit<
-  Linter.Config<Linter.RulesRecord & Rules>,
-  'plugins'
-> & {
+export type TypedFlatConfigItem = Omit<Linter.Config<Linter.RulesRecord & Rules>, 'plugins' | 'rules'> & {
   // Relax plugins type limitation, as most of the plugins did not have correct type info yet.
   /**
    * An object containing a name-value mapping of plugin names to plugin objects. When `files` is specified, these plugins are only available to the matching files.
@@ -23,6 +21,11 @@ export type TypedFlatConfigItem = Omit<
    * @see [Using plugins in your configuration](https://eslint.org/docs/latest/user-guide/configuring/configuration-files-new#using-plugins-in-your-configuration)
    */
   plugins?: Record<string, any>
+
+  /**
+   * Rules configuration. More flexible to allow plugin rules that may not be perfectly typed.
+   */
+  rules?: Record<string, Linter.RuleEntry<any> | undefined>
 }
 
 export interface OptionsFiles {
@@ -32,9 +35,34 @@ export interface OptionsFiles {
   files?: string[]
 }
 
-export type OptionsTypescript =
-  | (OptionsTypeScriptWithTypes & OptionsOverrides)
-  | (OptionsTypeScriptParserOptions & OptionsOverrides)
+export interface OptionsVue extends OptionsOverrides {
+  /**
+   * Create virtual files for Vue SFC blocks to enable linting.
+   *
+   * @see https://github.com/antfu/eslint-processor-vue-blocks
+   * @default true
+   */
+  sfcBlocks?: boolean | VueBlocksOptions
+
+  /**
+   * Vue version. Apply different rules set from `eslint-plugin-vue`.
+   *
+   * @default 3
+   */
+  vueVersion?: 2 | 3
+
+  /**
+   * Vue accessibility plugin. Help check a11y issue in `.vue` files upon enabled
+   *
+   * @see https://vue-a11y.github.io/eslint-plugin-vuejs-accessibility/
+   * @default false
+   */
+  a11y?: boolean
+}
+
+export type OptionsTypescript
+  = (OptionsTypeScriptWithTypes & OptionsOverrides)
+    | (OptionsTypeScriptParserOptions & OptionsOverrides)
 
 export interface OptionsFormatters {
   /**
@@ -209,29 +237,6 @@ export interface OptionsUnoCSS extends OptionsOverrides {
   strict?: boolean
 }
 
-export interface OptionsFSDPublicApi extends OptionsOverrides {
-  /**
-   * Without SegmentsAPI / InnerAPI restrictions.
-   * @default true
-   */
-  lite?: boolean
-}
-
-export interface OptionsFSD {
-  /**
-   * FSD Public API rules.
-   * @see https://github.com/feature-sliced/eslint-config/tree/master/rules/public-api
-   * @default true
-   */
-  publicApi?: boolean | OptionsFSDPublicApi
-  /**
-   * FSD Layers slices rules.
-   * @see https://github.com/feature-sliced/eslint-config/tree/master/rules/layers-slices
-   * @default true
-   */
-  layersSlices?: boolean | OptionsOverrides
-}
-
 export interface OptionsConfig
   extends OptionsComponentExts,
   OptionsProjectType {
@@ -274,6 +279,20 @@ export interface OptionsConfig
    * @default true
    */
   unicorn?: boolean | OptionsUnicorn
+
+  /**
+   * Options for eslint-plugin-import-lite.
+   *
+   * @default true
+   */
+  imports?: boolean | OptionsOverrides
+
+  /**
+   * Enable Vue support.
+   *
+   * @default auto-detect based on the dependencies
+   */
+  vue?: boolean | OptionsVue
 
   /**
    * Enable JSONC support.
@@ -375,14 +394,6 @@ export interface OptionsConfig
   pnpm?: boolean
 
   /**
-   * Enable FSD rules.
-   *
-   * @see https://feature-sliced.github.io/
-   * @default false
-   */
-  fsd?: boolean | OptionsFSD
-
-  /**
    * Use external formatters to format files.
    *
    * Requires installing:
@@ -416,6 +427,7 @@ export interface OptionsConfig
     stylistic?: TypedFlatConfigItem['rules']
     javascript?: TypedFlatConfigItem['rules']
     typescript?: TypedFlatConfigItem['rules']
+    vue?: TypedFlatConfigItem['rules']
     jsonc?: TypedFlatConfigItem['rules']
     markdown?: TypedFlatConfigItem['rules']
     yaml?: TypedFlatConfigItem['rules']

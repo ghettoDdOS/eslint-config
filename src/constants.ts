@@ -7,3 +7,9 @@ export const ReactRouterPackages = [
   '@react-router/dev',
 ]
 export const NextJsPackages = ['next']
+export const VuePackages = [
+  'vue',
+  'nuxt',
+  'vitepress',
+  '@slidev/cli',
+]

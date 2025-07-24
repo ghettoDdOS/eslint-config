@@ -18,10 +18,10 @@ import { GLOB_MARKDOWN, GLOB_SRC, GLOB_TS, GLOB_TSX } from '../globs'
 import { interopDefault } from '../utils'
 
 export async function react(
-  options: OptionsTypeScriptParserOptions &
-    OptionsTypeScriptWithTypes &
-    OptionsOverrides &
-    OptionsFiles = {},
+  options: OptionsTypeScriptParserOptions
+    & OptionsTypeScriptWithTypes
+    & OptionsOverrides
+    & OptionsFiles = {},
 ): Promise<TypedFlatConfigItem[]> {
   const {
     files = [GLOB_SRC],
@@ -176,7 +176,17 @@ export async function react(
                   ]
                 : []),
               ...(isUsingReactRouter
-                ? ['meta', 'links', 'headers', 'loader', 'action']
+                ? [
+                    'meta',
+                    'links',
+                    'headers',
+                    'loader',
+                    'action',
+                    'clientLoader',
+                    'clientAction',
+                    'handle',
+                    'shouldRevalidate',
+                  ]
                 : []),
             ],
           },

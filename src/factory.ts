@@ -14,7 +14,6 @@ import {
   comments,
   disables,
   effector,
-  fsd,
   ignores,
   imports,
   javascript,
@@ -34,11 +33,12 @@ import {
   typescript,
   unicorn,
   unocss,
+  vue,
   yaml,
 } from './configs'
 import { formatters } from './configs/formatters'
 import { regexp } from './configs/regexp'
-import { NextJsPackages, ReactPackages } from './constants'
+import { NextJsPackages, ReactPackages, VuePackages } from './constants'
 import {
   getOverrides,
   interopDefault,
@@ -64,7 +64,7 @@ export const defaultPluginRenaming = {
 
   '@stylistic': 'style',
   '@typescript-eslint': 'ts',
-  'import-x': 'import',
+  'import-lite': 'import',
   'n': 'node',
   'yml': 'yaml',
 }
@@ -93,8 +93,8 @@ export function config(
     autoRenamePlugins = true,
     componentExts = [],
     effector: enableEffector = isPackageExists('effector'),
-    fsd: enableFsd = false,
     gitignore: enableGitignore = true,
+    imports: enableImports = true,
     jsx: enableJsx = true,
     jsxA11y: enableJsxA11y = isUsingReact,
     next: enableNext = NextJsPackages.some(i => isPackageExists(i)),
@@ -104,6 +104,7 @@ export function config(
     typescript: enableTypeScript = isPackageExists('typescript'),
     unicorn: enableUnicorn = true,
     unocss: enableUnoCSS = false,
+    vue: enableVue = VuePackages.some(i => isPackageExists(i)),
   } = options
 
   let isInEditor = options.isInEditor
@@ -176,8 +177,25 @@ export function config(
     perfectionist(),
   )
 
+  if (enableImports) {
+    configs.push(
+      imports(enableImports === true
+        ? {
+            stylistic: stylisticOptions,
+          }
+        : {
+            stylistic: stylisticOptions,
+            ...enableImports,
+          }),
+    )
+  }
+
   if (enableUnicorn) {
     configs.push(unicorn(enableUnicorn === true ? {} : enableUnicorn))
+  }
+
+  if (enableVue) {
+    componentExts.push('vue')
   }
 
   if (enableJsx) {
@@ -208,6 +226,15 @@ export function config(
     configs.push(regexp(typeof enableRegexp === 'boolean' ? {} : enableRegexp))
   }
 
+  if (enableVue) {
+    configs.push(vue({
+      ...resolveSubOptions(options, 'vue'),
+      overrides: getOverrides(options, 'vue'),
+      stylistic: stylisticOptions,
+      typescript: !!enableTypeScript,
+    }))
+  }
+
   if (enableReact) {
     configs.push(
       react({
@@ -230,14 +257,6 @@ export function config(
     configs.push(
       next({
         overrides: getOverrides(options, 'next'),
-      }),
-    )
-  }
-
-  if (enableFsd) {
-    configs.push(
-      fsd({
-        ...resolveSubOptions(options, 'fsd'),
       }),
     )
   }
