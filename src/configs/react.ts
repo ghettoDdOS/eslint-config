@@ -120,6 +120,12 @@ export async function react(
         'react/no-use-context': 'warn',
         'react/no-useless-forward-ref': 'warn',
 
+        // opinionated rules from eslint-plugin-react-x
+        'react/prefer-shorthand-boolean': 'warn',
+        'react/prefer-destructuring-assignment': 'warn',
+        'react/no-missing-context-display-name': 'warn',
+        'react/no-missing-component-display-name': 'warn',
+
         // recommended rules from eslint-plugin-react-dom https://eslint-react.xyz/docs/rules/overview#dom-rules
         'react-dom/no-dangerously-set-innerhtml': 'warn',
         'react-dom/no-dangerously-set-innerhtml-with-children': 'error',
@@ -151,6 +157,12 @@ export async function react(
         'react-web-api/no-leaked-interval': 'warn',
         'react-web-api/no-leaked-resize-observer': 'warn',
         'react-web-api/no-leaked-timeout': 'warn',
+
+        // recommended rules from eslint-plugin-react-naming-convention https://eslint-react.xyz/docs/rules/overview#naming-convention-rules
+        'react-naming-convention/context-name': 'warn',
+
+        // opinionated rules from eslint-plugin-react-naming-convention
+        'react-naming-convention/use-state': 'warn',
 
         // preconfigured rules from eslint-plugin-react-refresh https://github.com/ArnaudBarre/eslint-plugin-react-refresh/tree/main/src
         'react-refresh/only-export-components': [

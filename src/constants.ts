@@ -13,3 +13,4 @@ export const VuePackages = [
   'vitepress',
   '@slidev/cli',
 ]
+export const ReactNativePackages = ['react-native', 'expo']

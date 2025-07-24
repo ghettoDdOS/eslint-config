@@ -154,6 +154,18 @@ export interface OptionsEffector extends OptionsOverrides {
   scope?: boolean
 }
 
+export interface OptionsReactNative extends OptionsOverrides {
+  /**
+   * Enable expo rules.
+   *
+   * Requires installing:
+   * - `eslint-plugin-expo`
+   *
+   * @default auto-detect based on the dependencies
+   */
+  expo?: boolean
+}
+
 export interface OptionsTypeScriptParserOptions {
   /**
    * Additional parser options for TypeScript.
@@ -360,6 +372,17 @@ export interface OptionsConfig
    * @default auto-detect based on the dependencies
    */
   next?: boolean | OptionsOverrides
+
+  /**
+   * Enable react-native rules.
+   *
+   * Requires installing:
+   * - `@react-native/eslint-plugin`
+   * - `eslint-plugin-react-native`
+   *
+   * @default auto-detect based on the dependencies
+   */
+  reactNative?: boolean | OptionsReactNative
 
   /**
    * Enable effector rules.

@@ -26,6 +26,7 @@ import {
   perfectionist,
   pnpm,
   react,
+  reactNative,
   sortPackageJson,
   sortTsconfig,
   stylistic,
@@ -38,7 +39,12 @@ import {
 } from './configs'
 import { formatters } from './configs/formatters'
 import { regexp } from './configs/regexp'
-import { NextJsPackages, ReactPackages, VuePackages } from './constants'
+import {
+  NextJsPackages,
+  ReactNativePackages,
+  ReactPackages,
+  VuePackages,
+} from './constants'
 import {
   getOverrides,
   interopDefault,
@@ -100,6 +106,7 @@ export function config(
     next: enableNext = NextJsPackages.some(i => isPackageExists(i)),
     pnpm: enableCatalogs = false,
     react: enableReact = isUsingReact,
+    reactNative: enableReactNative = ReactNativePackages.some(i => isPackageExists(i)),
     regexp: enableRegexp = true,
     typescript: enableTypeScript = isPackageExists('typescript'),
     unicorn: enableUnicorn = true,
@@ -241,6 +248,15 @@ export function config(
         ...typescriptOptions,
         overrides: getOverrides(options, 'react'),
         tsconfigPath,
+      }),
+    )
+  }
+
+  if (enableReactNative) {
+    configs.push(
+      reactNative({
+        ...resolveSubOptions(options, 'reactNative'),
+        overrides: getOverrides(options, 'reactNative'),
       }),
     )
   }
