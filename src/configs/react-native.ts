@@ -78,18 +78,16 @@ export async function reactNative(
       name: 'react-native/rules',
       rules: {
         'react-native-community/no-inline-styles': 'warn',
+        'react-native-community/no-raw-text': 'warn',
         'react-native-community/no-single-element-style-arrays': 'warn',
         'react-native-community/no-unused-styles': 'warn',
-        'react-native/no-deep-imports': 'error',
 
-        'react-native/no-raw-text': 'warn',
+        'react-native/no-deep-imports': 'error',
 
         ...expo
           ? {
               'expo/no-dynamic-env-var': 'error',
               'expo/no-env-var-destructuring': 'error',
-              'expo/prefer-box-shadow': 'warn',
-              'expo/use-dom-exports': 'error',
             }
           : {},
 
