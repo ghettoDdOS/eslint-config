@@ -78,11 +78,13 @@ export async function reactNative(
       name: 'react-native/rules',
       rules: {
         'react-native-community/no-inline-styles': 'warn',
+
         'react-native-community/no-raw-text': 'warn',
         'react-native-community/no-single-element-style-arrays': 'warn',
         'react-native-community/no-unused-styles': 'warn',
-
         'react-native/no-deep-imports': 'error',
+
+        'ts/no-require-imports': 'off',
 
         ...expo
           ? {
