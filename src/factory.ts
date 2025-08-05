@@ -19,7 +19,6 @@ import {
   javascript,
   jsonc,
   jsx,
-  jsxA11y,
   markdown,
   next,
   node,
@@ -68,10 +67,12 @@ export const defaultPluginRenaming = {
   '@eslint-react/hooks-extra': 'react-hooks-extra',
   '@eslint-react/naming-convention': 'react-naming-convention',
 
+  '@next/next': 'next',
   '@stylistic': 'style',
   '@typescript-eslint': 'ts',
   'import-lite': 'import',
   'n': 'node',
+
   'yml': 'yaml',
 }
 
@@ -102,7 +103,6 @@ export function config(
     gitignore: enableGitignore = true,
     imports: enableImports = true,
     jsx: enableJsx = true,
-    jsxA11y: enableJsxA11y = isUsingReact,
     next: enableNext = NextJsPackages.some(i => isPackageExists(i)),
     pnpm: enableCatalogs = false,
     react: enableReact = isUsingReact,
@@ -133,7 +133,7 @@ export function config(
         : {}
 
   if (stylisticOptions && !('jsx' in stylisticOptions)) {
-    stylisticOptions.jsx = enableJsx
+    stylisticOptions.jsx = typeof enableJsx === 'object' ? true : enableJsx
   }
 
   const configs: Awaitable<TypedFlatConfigItem[]>[] = []
@@ -206,7 +206,7 @@ export function config(
   }
 
   if (enableJsx) {
-    configs.push(jsx())
+    configs.push(jsx(enableJsx === true ? {} : enableJsx))
   }
 
   if (enableTypeScript) {
@@ -257,14 +257,6 @@ export function config(
       reactNative({
         ...resolveSubOptions(options, 'reactNative'),
         overrides: getOverrides(options, 'reactNative'),
-      }),
-    )
-  }
-
-  if (enableJsxA11y) {
-    configs.push(
-      jsxA11y({
-        overrides: getOverrides(options, 'jsxA11y'),
       }),
     )
   }
