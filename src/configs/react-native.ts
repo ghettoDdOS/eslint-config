@@ -11,7 +11,7 @@ import { ensurePackages, interopDefault } from '../utils'
 
 export async function reactNative(
   options: OptionsReactNative & OptionsFiles
-  = {},
+    = {},
 ): Promise<TypedFlatConfigItem[]> {
   const {
     expo = isPackageExists('expo'),
