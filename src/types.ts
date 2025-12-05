@@ -84,8 +84,8 @@ export interface OptionsVue extends OptionsOverrides {
 }
 
 export type OptionsTypescript
-  = (OptionsTypeScriptWithTypes & OptionsOverrides)
-    | (OptionsTypeScriptParserOptions & OptionsOverrides)
+  = (OptionsTypeScriptWithTypes & OptionsOverrides & OptionsTypeScriptErasableOnly)
+    | (OptionsTypeScriptParserOptions & OptionsOverrides & OptionsTypeScriptErasableOnly)
 
 export interface OptionsFormatters {
   /**
@@ -232,7 +232,7 @@ export interface OptionsStylistic {
 export interface StylisticConfig
   extends Pick<
     StylisticCustomizeOptions,
-    'indent' | 'quotes' | 'jsx' | 'semi'
+    'indent' | 'quotes' | 'jsx' | 'semi' | 'experimental'
   > {}
 
 export interface OptionsOverrides {
@@ -246,6 +246,16 @@ export interface OptionsProjectType {
    * @default 'app'
    */
   type?: 'app' | 'lib'
+}
+
+export interface OptionsTypeScriptErasableOnly {
+  /**
+   * Enable erasable syntax only rules.
+   *
+   * @see https://github.com/JoshuaKGoldberg/eslint-plugin-erasable-syntax-only
+   * @default false
+   */
+  erasableOnly?: boolean
 }
 
 export interface OptionsRegExp {
@@ -286,6 +296,16 @@ export interface OptionsConfig
   gitignore?: boolean | FlatGitignoreOptions
 
   /**
+   * Extend the global ignores.
+   *
+   * Passing an array to extends the ignores.
+   * Passing a function to modify the default ignores.
+   *
+   * @default []
+   */
+  ignores?: string[] | ((originals: string[]) => string[])
+
+  /**
    * Core rules. Can't be disabled.
    */
   javascript?: OptionsOverrides
@@ -321,6 +341,13 @@ export interface OptionsConfig
    * @default true
    */
   imports?: boolean | OptionsOverrides
+
+  /**
+   * Enable test support.
+   *
+   * @default true
+   */
+  test?: boolean | OptionsOverrides
 
   /**
    * Enable Vue support.
@@ -387,7 +414,7 @@ export interface OptionsConfig
    *
    * @default auto-detect based on the dependencies
    */
-  next?: boolean | OptionsOverrides
+  nextjs?: boolean | OptionsOverrides
 
   /**
    * Enable react-native rules.

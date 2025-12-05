@@ -2,8 +2,11 @@ import { config } from './src'
 
 export default config(
   {
-    typescript: true,
+    typescript: {
+      erasableOnly: true,
+    },
     formatters: true,
+    pnpm: true,
     type: 'lib',
   },
   {

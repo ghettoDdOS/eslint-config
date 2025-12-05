@@ -1,8 +1,11 @@
+import type { Linter } from 'eslint'
+
 import type {
   OptionsComponentExts,
   OptionsFiles,
   OptionsOverrides,
   OptionsProjectType,
+  OptionsTypeScriptErasableOnly,
   OptionsTypeScriptParserOptions,
   OptionsTypeScriptWithTypes,
   TypedFlatConfigItem,
@@ -20,10 +23,11 @@ export async function typescript(
     & OptionsOverrides
     & OptionsTypeScriptWithTypes
     & OptionsTypeScriptParserOptions
-    & OptionsProjectType = {},
+    & OptionsProjectType & OptionsTypeScriptErasableOnly = {},
 ): Promise<TypedFlatConfigItem[]> {
   const {
     componentExts = [],
+    erasableOnly = false,
     overrides = {},
     overridesTypeAware = {},
     parserOptions = {},
@@ -204,5 +208,21 @@ export async function typescript(
           },
         ]
       : []),
+    ...erasableOnly
+      ? [
+          {
+            name: 'antfu/typescript/erasable-syntax-only',
+            plugins: {
+              'erasable-syntax-only': await interopDefault(import('eslint-plugin-erasable-syntax-only')),
+            },
+            rules: {
+              'erasable-syntax-only/enums': 'error',
+              'erasable-syntax-only/import-aliases': 'error',
+              'erasable-syntax-only/namespaces': 'error',
+              'erasable-syntax-only/parameter-properties': 'error',
+            } as Record<string, Linter.RuleEntry>,
+          },
+        ]
+      : [],
   ]
 }

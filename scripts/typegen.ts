@@ -3,34 +3,44 @@ import fs from 'node:fs/promises'
 import { flatConfigsToRulesDTS } from 'eslint-typegen/core'
 import { builtinRules } from 'eslint/use-at-your-own-risk'
 
-import {
-  combine,
-  comments,
-  effector,
-  formatters,
-  imports,
-  javascript,
-  jsonc,
-  jsx,
-  markdown,
-  next,
-  node,
-  perfectionist,
-  pnpm,
-  react,
-  reactNative,
-  regexp,
-  sortPackageJson,
-  stylistic,
-  toml,
-  typescript,
-  unicorn,
-  unocss,
-  vue,
-  yaml,
-} from '../src'
+import { config } from '../src/factory'
 
-const configs = await combine(
+const configs = await config({
+  formatters: true,
+  imports: true,
+  jsx: {
+    a11y: true,
+  },
+  jsonc: true,
+  markdown: true,
+  nextjs: true,
+  react: true,
+  pnpm: true,
+  regexp: true,
+  stylistic: true,
+  gitignore: true,
+  typescript: {
+    tsconfigPath: 'tsconfig.json',
+    erasableOnly: true,
+  },
+  test: true,
+  unicorn: true,
+  unocss: true,
+  vue: {
+    a11y: true,
+  },
+  yaml: true,
+  toml: true,
+  effector: {
+    future: true,
+    patronum: true,
+    react: true,
+    scope: true,
+  },
+  reactNative: {
+    expo: true,
+  },
+}).prepend(
   {
     plugins: {
       '': {
@@ -38,29 +48,6 @@ const configs = await combine(
       },
     },
   },
-  comments(),
-  formatters(),
-  imports(),
-  javascript(),
-  jsx({ a11y: true }),
-  jsonc(),
-  markdown(),
-  node(),
-  perfectionist(),
-  pnpm(),
-  react(),
-  reactNative({ expo: true }),
-  sortPackageJson(),
-  stylistic(),
-  toml(),
-  regexp(),
-  typescript(),
-  unicorn(),
-  unocss(),
-  vue(),
-  yaml(),
-  next(),
-  effector({ react: true, patronum: true, future: true }),
 )
 
 const configNames = configs.map(i => i.name).filter(Boolean) as string[]

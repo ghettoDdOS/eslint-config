@@ -13,9 +13,10 @@ import {
   NextJsPackages,
   ReactRefreshAllowConstantExportPackages,
   ReactRouterPackages,
+  RemixPackages,
 } from '../constants'
 import { GLOB_MARKDOWN, GLOB_SRC, GLOB_TS, GLOB_TSX } from '../globs'
-import { interopDefault } from '../utils'
+import { ensurePackages, interopDefault } from '../utils'
 
 export async function react(
   options: OptionsTypeScriptParserOptions
@@ -31,29 +32,34 @@ export async function react(
     tsconfigPath,
   } = options
 
+  await ensurePackages([
+    '@eslint-react/eslint-plugin',
+    'eslint-plugin-react-hooks',
+    'eslint-plugin-react-refresh',
+  ])
+
   const isTypeAware = !!tsconfigPath
 
   const typeAwareRules: TypedFlatConfigItem['rules'] = {
     'react/no-leaked-conditional-rendering': 'warn',
   }
 
-  const [pluginReact, pluginReactHooks, pluginReactRefresh] = await Promise.all(
-    [
-      interopDefault(import('@eslint-react/eslint-plugin')),
-      interopDefault(import('eslint-plugin-react-hooks')),
-      interopDefault(import('eslint-plugin-react-refresh')),
-    ] as const,
-  )
+  const [
+    pluginReact,
+    pluginReactHooks,
+    pluginReactRefresh,
+  ] = await Promise.all([
+    interopDefault(import('@eslint-react/eslint-plugin')),
+    interopDefault(import('eslint-plugin-react-hooks')),
+    interopDefault(import('eslint-plugin-react-refresh')),
+  ] as const)
 
-  const isAllowConstantExport = ReactRefreshAllowConstantExportPackages.some(
-    i => isPackageExists(i),
-  )
-  const isUsingReactRouter = ReactRouterPackages.some(i =>
-    isPackageExists(i),
-  )
+  const isAllowConstantExport = ReactRefreshAllowConstantExportPackages.some(i => isPackageExists(i))
+  const isUsingRemix = RemixPackages.some(i => isPackageExists(i))
+  const isUsingReactRouter = ReactRouterPackages.some(i => isPackageExists(i))
   const isUsingNext = NextJsPackages.some(i => isPackageExists(i))
 
-  const plugins = pluginReact.configs.all.plugins
+  const plugins = (pluginReact.configs.all as any).plugins
 
   return [
     {
@@ -81,6 +87,7 @@ export async function react(
       name: 'react/rules',
       rules: {
         // recommended rules from eslint-plugin-react-x https://eslint-react.xyz/docs/rules/overview#core-rules
+        'react/jsx-no-comment-textnodes': 'warn',
         'react/jsx-no-duplicate-props': 'warn',
         'react/jsx-uses-vars': 'warn',
         'react/no-access-state-in-setstate': 'error',
@@ -91,7 +98,6 @@ export async function react(
         'react/no-children-only': 'warn',
         'react/no-children-to-array': 'warn',
         'react/no-clone-element': 'warn',
-        'react/no-comment-textnodes': 'warn',
         'react/no-component-will-mount': 'error',
         'react/no-component-will-receive-props': 'error',
         'react/no-component-will-update': 'error',
@@ -110,6 +116,7 @@ export async function react(
         'react/no-set-state-in-component-did-update': 'warn',
         'react/no-set-state-in-component-will-update': 'warn',
         'react/no-string-refs': 'error',
+        'react/no-unnecessary-use-prefix': 'warn',
         'react/no-unsafe-component-will-mount': 'warn',
         'react/no-unsafe-component-will-receive-props': 'warn',
         'react/no-unsafe-component-will-update': 'warn',
@@ -119,6 +126,7 @@ export async function react(
         'react/no-unused-state': 'warn',
         'react/no-use-context': 'warn',
         'react/no-useless-forward-ref': 'warn',
+        'react/prefer-use-state-lazy-initialization': 'warn',
 
         // opinionated rules from eslint-plugin-react-x
         'react/prefer-shorthand-boolean': 'warn',
@@ -144,13 +152,10 @@ export async function react(
         'react-dom/no-void-elements-with-children': 'error',
 
         // recommended rules eslint-plugin-react-hooks https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks/src/rules
-        'react-hooks/exhaustive-deps': 'warn',
-        'react-hooks/rules-of-hooks': 'error',
+        ...pluginReactHooks.configs.recommended.rules,
 
         // recommended rules from eslint-plugin-react-hooks-extra https://eslint-react.xyz/docs/rules/overview#hooks-extra-rules
         'react-hooks-extra/no-direct-set-state-in-use-effect': 'warn',
-        'react-hooks-extra/no-unnecessary-use-prefix': 'warn',
-        'react-hooks-extra/prefer-use-state-lazy-initialization': 'warn',
 
         // recommended rules from eslint-plugin-react-web-api https://eslint-react.xyz/docs/rules/overview#web-api-rules
         'react-web-api/no-leaked-event-listener': 'warn',
@@ -187,7 +192,7 @@ export async function react(
                     'generateViewport',
                   ]
                 : []),
-              ...(isUsingReactRouter
+              ...(isUsingRemix || isUsingReactRouter
                 ? [
                     'meta',
                     'links',
@@ -208,7 +213,7 @@ export async function react(
         ...overrides,
       },
     },
-    ...(isTypeAware
+    ...isTypeAware
       ? [
           {
             files: filesTypeAware,
@@ -219,6 +224,6 @@ export async function react(
             },
           },
         ]
-      : []),
+      : [],
   ]
 }

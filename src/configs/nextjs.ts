@@ -3,7 +3,7 @@ import type { OptionsFiles, OptionsOverrides, TypedFlatConfigItem } from '../typ
 import { GLOB_SRC } from '../globs'
 import { ensurePackages, interopDefault } from '../utils'
 
-export async function next(
+export async function nextjs(
   options: OptionsOverrides & OptionsFiles = {},
 ): Promise<TypedFlatConfigItem[]> {
   const {

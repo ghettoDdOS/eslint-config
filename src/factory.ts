@@ -8,6 +8,7 @@ import type {
 } from './types'
 
 import { FlatConfigComposer } from 'eslint-flat-config-utils'
+import { findUpSync } from 'find-up-simple'
 import { isPackageExists } from 'local-pkg'
 
 import {
@@ -17,10 +18,11 @@ import {
   ignores,
   imports,
   javascript,
+  jsdoc,
   jsonc,
   jsx,
   markdown,
-  next,
+  nextjs,
   node,
   perfectionist,
   pnpm,
@@ -29,6 +31,7 @@ import {
   sortPackageJson,
   sortTsconfig,
   stylistic,
+  test,
   toml,
   typescript,
   unicorn,
@@ -72,6 +75,7 @@ export const defaultPluginRenaming = {
   '@typescript-eslint': 'ts',
   'import-lite': 'import',
   'n': 'node',
+  'vitest': 'test',
 
   'yml': 'yaml',
 }
@@ -87,7 +91,7 @@ export const defaultPluginRenaming = {
  *  The merged ESLint configurations.
  */
 export function config(
-  options: OptionsConfig & Omit<TypedFlatConfigItem, 'files'> = {},
+  options: OptionsConfig & Omit<TypedFlatConfigItem, 'files' | 'ignores'> = {},
   ...userConfigs: Awaitable<
     | TypedFlatConfigItem
     | TypedFlatConfigItem[]
@@ -95,22 +99,22 @@ export function config(
     | Linter.Config[]
   >[]
 ): FlatConfigComposer<TypedFlatConfigItem, ConfigNames> {
-  const isUsingReact = ReactPackages.some(i => isPackageExists(i))
   const {
     autoRenamePlugins = true,
     componentExts = [],
     effector: enableEffector = isPackageExists('effector'),
     gitignore: enableGitignore = true,
+    ignores: userIgnores = [],
     imports: enableImports = true,
     jsx: enableJsx = true,
-    next: enableNext = NextJsPackages.some(i => isPackageExists(i)),
-    pnpm: enableCatalogs = false,
-    react: enableReact = isUsingReact,
+    nextjs: enableNext = NextJsPackages.some(i => isPackageExists(i)),
+    pnpm: enableCatalogs = !!findUpSync('pnpm-workspace.yaml'),
+    react: enableReact = ReactPackages.some(i => isPackageExists(i)),
     reactNative: enableReactNative = ReactNativePackages.some(i => isPackageExists(i)),
     regexp: enableRegexp = true,
     typescript: enableTypeScript = isPackageExists('typescript'),
     unicorn: enableUnicorn = true,
-    unocss: enableUnoCSS = false,
+    unocss: enableUnoCSS = isPackageExists('unocss'),
     vue: enableVue = VuePackages.some(i => isPackageExists(i)),
   } = options
 
@@ -169,13 +173,16 @@ export function config(
 
   // Base configs
   configs.push(
-    ignores(options.ignores),
+    ignores(userIgnores),
     javascript({
       isInEditor,
       overrides: getOverrides(options, 'javascript'),
     }),
     comments(),
     node(),
+    jsdoc({
+      stylistic: stylisticOptions,
+    }),
     imports({
       stylistic: stylisticOptions,
     }),
@@ -233,6 +240,13 @@ export function config(
     configs.push(regexp(typeof enableRegexp === 'boolean' ? {} : enableRegexp))
   }
 
+  if (options.test ?? true) {
+    configs.push(test({
+      isInEditor,
+      overrides: getOverrides(options, 'test'),
+    }))
+  }
+
   if (enableVue) {
     configs.push(vue({
       ...resolveSubOptions(options, 'vue'),
@@ -263,8 +277,8 @@ export function config(
 
   if (enableNext) {
     configs.push(
-      next({
-        overrides: getOverrides(options, 'next'),
+      nextjs({
+        overrides: getOverrides(options, 'nextjs'),
       }),
     )
   }
@@ -300,7 +314,9 @@ export function config(
 
   if (enableCatalogs) {
     configs.push(
-      pnpm(),
+      pnpm({
+        isInEditor,
+      }),
     )
   }
 
@@ -369,15 +385,16 @@ export function config(
   }
 
   if (isInEditor) {
-    composer = composer.disableRulesFix(
-      ['unused-imports/no-unused-imports', 'prefer-const'],
-      {
-        builtinRules: () =>
-          import(['eslint', 'use-at-your-own-risk'].join('/')).then(
-            r => r.builtinRules,
-          ),
-      },
-    )
+    composer = composer.disableRulesFix([
+      'unused-imports/no-unused-imports',
+      'test/no-only-tests',
+      'prefer-const',
+    ], {
+      builtinRules: () =>
+        import(['eslint', 'use-at-your-own-risk'].join('/')).then(
+          r => r.builtinRules,
+        ),
+    })
   }
 
   return composer
