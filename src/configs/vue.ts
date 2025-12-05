@@ -31,6 +31,12 @@ export async function vue(
     indent = 2,
   } = typeof stylistic === 'boolean' ? {} : stylistic
 
+  await ensurePackages([
+    'eslint-plugin-vue',
+    'vue-eslint-parser',
+    'eslint-processor-vue-blocks',
+  ])
+
   if (a11y) {
     await ensurePackages([
       'eslint-plugin-vuejs-accessibility',
