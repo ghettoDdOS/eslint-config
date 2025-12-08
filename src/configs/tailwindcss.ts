@@ -41,7 +41,7 @@ export async function tailwindcss(
         ...overrides,
       },
       settings: {
-        tailwindcss: {
+        'better-tailwindcss': {
           entryPoint,
           tsconfig: tsconfigPath,
         },
