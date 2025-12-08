@@ -26,6 +26,7 @@ const configs = await config({
   test: true,
   unicorn: true,
   unocss: true,
+  tailwindcss: true,
   vue: {
     a11y: true,
   },

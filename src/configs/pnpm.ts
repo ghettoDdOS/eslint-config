@@ -72,6 +72,7 @@ export async function pnpm(options: OptionsIsInEditor): Promise<TypedFlatConfigI
           {
             order: [
               // Settings
+              // @keep-sorted
               ...[
                 'cacheDir',
                 'catalogMode',
@@ -101,7 +102,7 @@ export async function pnpm(options: OptionsIsInEditor): Promise<TypedFlatConfigI
                 'preferWorkspacePackages',
                 'publicHoistPattern',
                 'registrySupportsTimeField',
-                'requiredScrpts',
+                'requiredScripts',
                 'resolutionMode',
                 'savePrefix',
                 'scriptShell',
@@ -124,6 +125,7 @@ export async function pnpm(options: OptionsIsInEditor): Promise<TypedFlatConfigI
               'catalogs',
 
               // Other
+              // @keep-sorted
               ...[
                 'allowedDeprecatedVersions',
                 'allowNonAppliedPatches',

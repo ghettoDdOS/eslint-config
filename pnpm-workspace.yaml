@@ -36,6 +36,7 @@ catalogs:
     '@unocss/eslint-plugin': ^66.5.10
     eslint: ^9.39.1
     eslint-plugin-astro: ^1.5.0
+    eslint-plugin-better-tailwindcss: ^3.8.0
     eslint-plugin-erasable-syntax-only: ^0.4.0
     eslint-plugin-format: ^1.0.2
     eslint-plugin-jsx-a11y: ^6.10.2
@@ -60,6 +61,7 @@ catalogs:
     eslint-flat-config-utils: ^2.1.4
     eslint-merge-processors: ^2.0.0
     eslint-plugin-antfu: ^3.1.1
+    eslint-plugin-command: ^3.3.1
     eslint-plugin-import-lite: ^0.3.0
     eslint-plugin-jsdoc: ^61.4.1
     eslint-plugin-jsonc: ^2.21.0

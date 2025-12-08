@@ -8,6 +8,7 @@
 - Opinionated, but [very customizable](#customization)
 - [ESLint Flat config](https://eslint.org/docs/latest/use/configure/configuration-files-new), compose easily!
 - Optional [UnoCSS](#unocss) support
+- Optional [TailwindCSS](#tailwindcss) support
 - Optional [formatters](#formatters) support for formatting CSS, HTML, XML, etc.
 - **Style principle**: Minimal for reading, stable for diff, consistent
   - Sorted imports, dangling commas
@@ -93,6 +94,7 @@ Add the following settings to your `.vscode/settings.json`:
     "javascriptreact",
     "typescript",
     "typescriptreact",
+    "vue",
     "html",
     "markdown",
     "json",
@@ -100,6 +102,10 @@ Add the following settings to your `.vscode/settings.json`:
     "yaml",
     "toml",
     "xml",
+    "gql",
+    "graphql",
+    "astro",
+    "svelte",
     "css",
     "less",
     "scss",
@@ -301,16 +307,17 @@ Check out the [configs](https://github.com/ghettoDdOS/eslint-config/blob/master/
 
 Since flat config requires us to explicitly provide the plugin names (instead of the mandatory convention from npm package name), we renamed some plugins to make the overall scope more consistent and easier to write.
 
-| New Prefix | Original Prefix        | Source Plugin                                                                                         |
-| ---------- | ---------------------- | ----------------------------------------------------------------------------------------------------- |
-| `import/*` | `import-lite/*`        | [eslint-plugin-import-lite](https://github.com/9romise/eslint-plugin-import-lite)                     |
-| `node/*`   | `n/*`                  | [eslint-plugin-n](https://github.com/eslint-community/eslint-plugin-n)                                |
-| `yaml/*`   | `yml/*`                | [eslint-plugin-yml](https://github.com/ota-meshi/eslint-plugin-yml)                                   |
-| `ts/*`     | `@typescript-eslint/*` | [@typescript-eslint/eslint-plugin](https://github.com/typescript-eslint/typescript-eslint)            |
-| `style/*`  | `@stylistic/*`         | [@stylistic/eslint-plugin](https://github.com/eslint-stylistic/eslint-stylistic)                      |
-| `test/*`   | `vitest/*`             | [@vitest/eslint-plugin](https://github.com/vitest-dev/eslint-plugin-vitest)                           |
-| `test/*`   | `no-only-tests/*`      | [eslint-plugin-no-only-tests](https://github.com/levibuzolic/eslint-plugin-no-only-tests)             |
-| `next/*`   | `@next/next`           | [@next/eslint-plugin-next](https://github.com/vercel/next.js/tree/canary/packages/eslint-plugin-next) |
+| New Prefix      | Original Prefix        | Source Plugin                                                                                         |
+| --------------- | ---------------------- | ----------------------------------------------------------------------------------------------------- |
+| `import/*`      | `import-lite/*`        | [eslint-plugin-import-lite](https://github.com/9romise/eslint-plugin-import-lite)                     |
+| `node/*`        | `n/*`                  | [eslint-plugin-n](https://github.com/eslint-community/eslint-plugin-n)                                |
+| `yaml/*`        | `yml/*`                | [eslint-plugin-yml](https://github.com/ota-meshi/eslint-plugin-yml)                                   |
+| `ts/*`          | `@typescript-eslint/*` | [@typescript-eslint/eslint-plugin](https://github.com/typescript-eslint/typescript-eslint)            |
+| `style/*`       | `@stylistic/*`         | [@stylistic/eslint-plugin](https://github.com/eslint-stylistic/eslint-stylistic)                      |
+| `test/*`        | `vitest/*`             | [@vitest/eslint-plugin](https://github.com/vitest-dev/eslint-plugin-vitest)                           |
+| `test/*`        | `no-only-tests/*`      | [eslint-plugin-no-only-tests](https://github.com/levibuzolic/eslint-plugin-no-only-tests)             |
+| `next/*`        | `@next/next`           | [@next/eslint-plugin-next](https://github.com/vercel/next.js/tree/canary/packages/eslint-plugin-next) |
+| `tailwindcss/*` | `better-tailwindcss`   | [eslint-plugin-better-tailwindcss](https://github.com/schoero/eslint-plugin-better-tailwindcss)       |
 
 When you want to override rules, or disable them inline, you need to update to the new prefix:
 
@@ -481,11 +488,62 @@ export default config({
 })
 ```
 
+#### TailwindCSS
+
+To enable TailwindCSS support, you need to explicitly turn it on:
+
+```js
+// eslint.config.js
+import config from '@ghettoddos/eslint-config'
+
+export default config({
+  tailwindcss: true,
+})
+```
+
 Running `npx eslint` should prompt you to install the required dependencies, otherwise, you can install them manually:
 
 ```bash
-npm i -D @unocss/eslint-plugin
+npm i -D eslint-plugin-better-tailwindcss
 ```
+
+### Optional Rules
+
+This config also provides some optional plugins/rules for extended usage.
+
+#### `command`
+
+Powered by [`eslint-plugin-command`](https://github.com/antfu/eslint-plugin-command). It is not a typical rule for linting, but an on-demand micro-codemod tool that triggers by specific comments.
+
+For a few triggers, for example:
+
+- `/// to-function` - converts an arrow function to a normal function
+- `/// to-arrow` - converts a normal function to an arrow function
+- `/// to-for-each` - converts a for-in/for-of loop to `.forEach()`
+- `/// to-for-of` - converts a `.forEach()` to a for-of loop
+- `/// keep-sorted` - sorts an object/array/interface
+- ... etc. - refer to the [documentation](https://github.com/antfu/eslint-plugin-command#built-in-commands)
+
+You can add the trigger comment one line above the code you want to transform, for example (note the triple slash):
+
+<!-- eslint-skip -->
+
+```ts
+/// to-function
+const foo = async (msg: string): void => {
+  console.log(msg)
+}
+```
+
+Will be transformed to this when you hit save with your editor or run `eslint --fix`:
+
+```ts
+async function foo(msg: string): void {
+  console.log(msg)
+}
+```
+
+The command comments are usually one-off and will be removed along with the transformation.
 
 ### Type Aware Rules
 

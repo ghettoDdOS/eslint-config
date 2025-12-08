@@ -282,6 +282,16 @@ export interface OptionsUnoCSS extends OptionsOverrides {
   strict?: boolean
 }
 
+export interface OptionsTailwindCSS extends OptionsOverrides {
+  /**
+   * The path to the entry file of the css based tailwind config
+   *
+   * @see https://github.com/schoero/eslint-plugin-better-tailwindcss/tree/main?tab=readme-ov-file#quick-start
+   * @example `src/global.css`
+   */
+  entryPoint?: string
+}
+
 export interface OptionsConfig
   extends OptionsComponentExts,
   OptionsProjectType {
@@ -352,6 +362,11 @@ export interface OptionsConfig
   /**
    * Enable Vue support.
    *
+   * Requires installing:
+   * - `eslint-plugin-vue`
+   * - `eslint-processor-vue-blocks`
+   * - `vue-eslint-parser`
+   *
    * @default auto-detect based on the dependencies
    */
   vue?: boolean | OptionsVue
@@ -405,12 +420,20 @@ export interface OptionsConfig
   /**
    * Enable react rules.
    *
+   * Requires installing:
+   * - `@eslint-react/eslint-plugin`
+   * - `eslint-plugin-react-hooks`
+   * - `eslint-plugin-react-refresh`
+   *
    * @default auto-detect based on the dependencies
    */
   react?: boolean | OptionsOverrides
 
   /**
    * Enable next rules.
+   *
+   * Requires installing:
+   * - `@next/eslint-plugin-next`
    *
    * @default auto-detect based on the dependencies
    */
@@ -443,9 +466,19 @@ export interface OptionsConfig
    * Requires installing:
    * - `@unocss/eslint-plugin`
    *
-   * @default false
+   * @default auto-detect based on the dependencies
    */
   unocss?: boolean | OptionsUnoCSS
+
+  /**
+   * Enable tailwindcss rules.
+   *
+   * Requires installing:
+   * - `eslint-plugin-better-tailwindcss`
+   *
+   * @default auto-detect based on the dependencies
+   */
+  tailwindcss?: boolean | OptionsTailwindCSS
 
   /**
    * Enable pnpm (workspace/catalogs) support.

@@ -12,6 +12,7 @@ import { findUpSync } from 'find-up-simple'
 import { isPackageExists } from 'local-pkg'
 
 import {
+  command,
   comments,
   disables,
   effector,
@@ -31,6 +32,7 @@ import {
   sortPackageJson,
   sortTsconfig,
   stylistic,
+  tailwindcss,
   test,
   toml,
   typescript,
@@ -73,6 +75,7 @@ export const defaultPluginRenaming = {
   '@next/next': 'next',
   '@stylistic': 'style',
   '@typescript-eslint': 'ts',
+  'better-tailwindcss': 'tailwindcss',
   'import-lite': 'import',
   'n': 'node',
   'vitest': 'test',
@@ -112,6 +115,7 @@ export function config(
     react: enableReact = ReactPackages.some(i => isPackageExists(i)),
     reactNative: enableReactNative = ReactNativePackages.some(i => isPackageExists(i)),
     regexp: enableRegexp = true,
+    tailwindcss: enableTailwindCSS = isPackageExists('tailwindcss'),
     typescript: enableTypeScript = isPackageExists('typescript'),
     unicorn: enableUnicorn = true,
     unocss: enableUnoCSS = isPackageExists('unocss'),
@@ -186,6 +190,7 @@ export function config(
     imports({
       stylistic: stylisticOptions,
     }),
+    command(),
 
     // Optional plugins (installed but not enabled by default)
     perfectionist(),
@@ -297,6 +302,17 @@ export function config(
       unocss({
         ...resolveSubOptions(options, 'unocss'),
         overrides: getOverrides(options, 'unocss'),
+      }),
+    )
+  }
+
+  if (enableTailwindCSS) {
+    configs.push(
+      tailwindcss({
+        ...typescriptOptions,
+        ...resolveSubOptions(options, 'tailwindcss'),
+        overrides: getOverrides(options, 'tailwindcss'),
+        stylistic: stylisticOptions,
       }),
     )
   }
