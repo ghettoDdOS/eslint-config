@@ -14,6 +14,8 @@ overrides:
 
 catalogs:
   dev:
+    '@commitlint/cli': ^20.2.0
+    '@commitlint/config-conventional': ^20.2.0
     '@eslint/config-inspector': ^1.4.2
     '@types/eslint-plugin-jsx-a11y': ^6.10.1
     '@types/node': ^24.10.1

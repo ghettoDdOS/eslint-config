@@ -146,6 +146,8 @@
     "yaml-eslint-parser": "catalog:prod"
   },
   "devDependencies": {
+    "@commitlint/cli": "catalog:dev",
+    "@commitlint/config-conventional": "catalog:dev",
     "@eslint-react/eslint-plugin": "catalog:peer",
     "@eslint/config-inspector": "catalog:dev",
     "@ghettoddos/eslint-config": "workspace:*",
@@ -183,7 +185,8 @@
     "eslint": "catalog:peer"
   },
   "simple-git-hooks": {
-    "pre-commit": "npx lint-staged"
+    "pre-commit": "npx lint-staged",
+    "commit-msg": "npx --no -- commitlint --edit `$1`"
   },
   "lint-staged": {
     "*": "eslint --fix"
