@@ -25,6 +25,9 @@ export const ReactPackages = [
   ...ReactNativePackages,
   'react',
 ]
+export const ReactCompilerPackages = [
+  'babel-plugin-react-compiler',
+]
 export const VuePackages = [
   'vue',
   'nuxt',

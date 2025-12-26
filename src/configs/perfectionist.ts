@@ -23,18 +23,17 @@ export async function perfectionist(): Promise<TypedFlatConfigItem[]> {
           'error',
           {
             groups: [
-              'type',
-              ['parent-type', 'sibling-type', 'index-type', 'internal-type'],
+              'type-external',
+              ['type-parent', 'type-sibling', 'type-index', 'type-internal'],
 
               'builtin',
               'external',
               'internal',
               ['parent', 'sibling', 'index'],
               'side-effect',
-              'object',
               'unknown',
             ],
-            newlinesBetween: 'always',
+            newlinesBetween: 1,
             order: 'asc',
             type: 'natural',
           },

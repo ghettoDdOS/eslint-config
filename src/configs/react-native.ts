@@ -4,6 +4,7 @@ import type {
   TypedFlatConfigItem,
 } from '../types'
 
+import globals from 'globals'
 import { isPackageExists } from 'local-pkg'
 
 import { GLOB_SRC } from '../globs'
@@ -48,25 +49,23 @@ export async function reactNative(
       files,
       languageOptions: {
         globals: {
+          ...globals.browser,
           '__DEV__': 'readonly',
-          '__fbBatchedBridgeConfig': false,
-          'Blob': true,
-          'clearImmediate': true,
-          'document': false,
+          'alert': false,
+          'cancelAnimationFrame': false,
+          'cancelIdleCallback': false,
+          'clearImmediate': false,
           'ErrorUtils': false,
-          'exports': false,
-          'File': true,
-          'Map': true,
+          'fetch': false,
+          'FormData': false,
           'navigator': false,
-          'Promise': true,
-          'queueMicrotask': true,
-          'requestAnimationFrame': true,
-          'requestIdleCallback': true,
-          'Set': true,
-          'setImmediate': true,
+          'process': false,
+          'requestAnimationFrame': false,
+          'requestIdleCallback': false,
+          'setImmediate': false,
           'shared-node-browser': true,
-          'WebSocket': true,
           'window': false,
+          'XMLHttpRequest': false,
         },
         parserOptions: {
           ecmaFeatures: {
@@ -85,12 +84,14 @@ export async function reactNative(
         'react-native-community/no-unused-styles': 'warn',
 
         'react-native/no-deep-imports': 'error',
+
         'ts/no-require-imports': 'off',
 
         ...expo
           ? {
               'expo/no-dynamic-env-var': 'error',
               'expo/no-env-var-destructuring': 'error',
+              'expo/use-dom-exports': 'error',
             }
           : {},
 

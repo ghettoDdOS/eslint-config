@@ -109,8 +109,10 @@ export function config(
     gitignore: enableGitignore = true,
     ignores: userIgnores = [],
     imports: enableImports = true,
+    jsdoc: enableJsdoc = true,
     jsx: enableJsx = true,
     nextjs: enableNext = NextJsPackages.some(i => isPackageExists(i)),
+    node: enableNode = true,
     pnpm: enableCatalogs = !!findUpSync('pnpm-workspace.yaml'),
     react: enableReact = ReactPackages.some(i => isPackageExists(i)),
     reactNative: enableReactNative = ReactNativePackages.some(i => isPackageExists(i)),
@@ -149,22 +151,18 @@ export function config(
   if (enableGitignore) {
     if (typeof enableGitignore !== 'boolean') {
       configs.push(
-        interopDefault(import('eslint-config-flat-gitignore')).then(r => [
-          r({
-            name: 'gitignore',
-            ...enableGitignore,
-          }),
-        ]),
+        interopDefault(import('eslint-config-flat-gitignore')).then(r => [r({
+          name: 'gitignore',
+          ...enableGitignore,
+        })]),
       )
     }
     else {
       configs.push(
-        interopDefault(import('eslint-config-flat-gitignore')).then(r => [
-          r({
-            name: 'gitignore',
-            strict: false,
-          }),
-        ]),
+        interopDefault(import('eslint-config-flat-gitignore')).then(r => [r({
+          name: 'gitignore',
+          strict: false,
+        })]),
       )
     }
   }
@@ -183,34 +181,39 @@ export function config(
       overrides: getOverrides(options, 'javascript'),
     }),
     comments(),
-    node(),
-    jsdoc({
-      stylistic: stylisticOptions,
-    }),
-    imports({
-      stylistic: stylisticOptions,
-    }),
     command(),
 
     // Optional plugins (installed but not enabled by default)
     perfectionist(),
   )
 
+  if (enableNode) {
+    configs.push(
+      node(),
+    )
+  }
+
+  if (enableJsdoc) {
+    configs.push(
+      jsdoc({
+        stylistic: stylisticOptions,
+      }),
+    )
+  }
+
   if (enableImports) {
     configs.push(
-      imports(enableImports === true
-        ? {
-            stylistic: stylisticOptions,
-          }
-        : {
-            stylistic: stylisticOptions,
-            ...enableImports,
-          }),
+      imports({
+        stylistic: stylisticOptions,
+        ...resolveSubOptions(options, 'imports'),
+      }),
     )
   }
 
   if (enableUnicorn) {
-    configs.push(unicorn(enableUnicorn === true ? {} : enableUnicorn))
+    configs.push(
+      unicorn(enableUnicorn === true ? {} : enableUnicorn),
+    )
   }
 
   if (enableVue) {
@@ -218,7 +221,9 @@ export function config(
   }
 
   if (enableJsx) {
-    configs.push(jsx(enableJsx === true ? {} : enableJsx))
+    configs.push(
+      jsx(enableJsx === true ? {} : enableJsx),
+    )
   }
 
   if (enableTypeScript) {
@@ -246,25 +251,30 @@ export function config(
   }
 
   if (options.test ?? true) {
-    configs.push(test({
-      isInEditor,
-      overrides: getOverrides(options, 'test'),
-    }))
+    configs.push(
+      test({
+        isInEditor,
+        overrides: getOverrides(options, 'test'),
+      }),
+    )
   }
 
   if (enableVue) {
-    configs.push(vue({
-      ...resolveSubOptions(options, 'vue'),
-      overrides: getOverrides(options, 'vue'),
-      stylistic: stylisticOptions,
-      typescript: !!enableTypeScript,
-    }))
+    configs.push(
+      vue({
+        ...resolveSubOptions(options, 'vue'),
+        overrides: getOverrides(options, 'vue'),
+        stylistic: stylisticOptions,
+        typescript: !!enableTypeScript,
+      }),
+    )
   }
 
   if (enableReact) {
     configs.push(
       react({
         ...typescriptOptions,
+        ...resolveSubOptions(options, 'react'),
         overrides: getOverrides(options, 'react'),
         tsconfigPath,
       }),
@@ -329,9 +339,13 @@ export function config(
   }
 
   if (enableCatalogs) {
+    const optionsPnpm = resolveSubOptions(options, 'pnpm')
     configs.push(
       pnpm({
         isInEditor,
+        json: options.jsonc !== false,
+        yaml: options.yaml !== false,
+        ...optionsPnpm,
       }),
     )
   }

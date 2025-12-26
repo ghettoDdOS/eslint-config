@@ -2,7 +2,7 @@
   "name": "@ghettoddos/eslint-config",
   "type": "module",
   "version": "3.1.1",
-  "packageManager": "pnpm@10.24.0",
+  "packageManager": "pnpm@10.26.2",
   "description": "ghettoDdOS ESLint config",
   "author": "ghettoDdOS <pen.egor2002@gamil.com> (https://github.com/ghettoDdOS/)",
   "license": "MIT",
@@ -18,10 +18,12 @@
     "eslint-config"
   ],
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/index.mjs",
+    "./package.json": "./package.json"
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "files": [
     "dist"
   ],
@@ -159,7 +161,6 @@
     "@unocss/eslint-plugin": "catalog:peer",
     "bumpp": "catalog:dev",
     "eslint": "catalog:peer",
-    "eslint-plugin-astro": "catalog:peer",
     "eslint-plugin-better-tailwindcss": "catalog:peer",
     "eslint-plugin-erasable-syntax-only": "catalog:peer",
     "eslint-plugin-format": "catalog:peer",
@@ -180,9 +181,6 @@
     "vitest": "catalog:dev",
     "vue": "catalog:peer",
     "vue-eslint-parser": "catalog:peer"
-  },
-  "resolutions": {
-    "eslint": "catalog:peer"
   },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged",
