@@ -130,7 +130,7 @@ export async function react(
         'react/prefer-use-state-lazy-initialization': 'warn',
 
         // opinionated rules from eslint-plugin-react-x
-        'react/prefer-shorthand-boolean': 'warn',
+        'react/jsx-shorthand-boolean': 'warn',
         'react/prefer-destructuring-assignment': 'warn',
         'react/no-missing-context-display-name': 'warn',
         'react/no-missing-component-display-name': 'warn',
