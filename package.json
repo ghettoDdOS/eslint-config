@@ -2,7 +2,7 @@
   "name": "@ghettoddos/eslint-config",
   "type": "module",
   "version": "3.2.1",
-  "packageManager": "pnpm@10.26.2",
+  "packageManager": "pnpm@10.28.0",
   "description": "ghettoDdOS ESLint config",
   "author": "ghettoDdOS <pen.egor2002@gamil.com> (https://github.com/ghettoDdOS/)",
   "license": "MIT",
@@ -21,8 +21,6 @@
     ".": "./dist/index.mjs",
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
   "files": [
     "dist"
@@ -47,7 +45,7 @@
     "@react-native/eslint-plugin": ">=0.80.0",
     "@unocss/eslint-plugin": ">=0.50.0",
     "eslint": "^9.10.0",
-    "eslint-plugin-better-tailwindcss": "^3.8.0",
+    "eslint-plugin-better-tailwindcss": "^4.0.0",
     "eslint-plugin-effector": ">=0.15.0",
     "eslint-plugin-expo": "^0.1.4",
     "eslint-plugin-format": ">=0.1.0",

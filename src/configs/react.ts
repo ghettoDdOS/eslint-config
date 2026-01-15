@@ -128,6 +128,7 @@ export async function react(
         'react/no-use-context': 'warn',
         'react/no-useless-forward-ref': 'warn',
         'react/prefer-use-state-lazy-initialization': 'warn',
+        'react/prefer-namespace-import': 'error',
 
         // opinionated rules from eslint-plugin-react-x
         'react/jsx-shorthand-boolean': 'warn',

@@ -27,8 +27,13 @@ export async function tailwindcss(
         // recommended rules stylistics rules from eslint-plugin-better-tailwindcss https://github.com/schoero/eslint-plugin-better-tailwindcss/tree/main?tab=readme-ov-file#stylistic-rules
         ...(stylistic
           ? {
+              'tailwindcss/enforce-canonical-classes': 'warn',
               'tailwindcss/enforce-consistent-class-order': 'warn',
-              'tailwindcss/enforce-consistent-line-wrapping': ['warn', { indent }],
+              'tailwindcss/enforce-consistent-line-wrapping': [
+                'warn',
+                { indent: typeof indent === 'number' ? indent : indent === 'tab' ? 'tab' : 2 },
+              ],
+              'tailwindcss/no-deprecated-classes': 'warn',
               'tailwindcss/no-duplicate-classes': 'warn',
               'tailwindcss/no-unnecessary-whitespace': 'warn',
             }
@@ -36,7 +41,7 @@ export async function tailwindcss(
 
         // recommended rules correctness rules from eslint-plugin-better-tailwindcss https://github.com/schoero/eslint-plugin-better-tailwindcss/tree/main?tab=readme-ov-file#correctness-rules
         'tailwindcss/no-conflicting-classes': 'error',
-        'tailwindcss/no-unregistered-classes': 'error',
+        'tailwindcss/no-unknown-classes': 'error',
 
         ...overrides,
       },
