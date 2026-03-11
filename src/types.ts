@@ -2,6 +2,7 @@ import type { StylisticCustomizeOptions } from '@stylistic/eslint-plugin'
 import type { ParserOptions } from '@typescript-eslint/parser'
 import type { Linter } from 'eslint'
 import type { FlatGitignoreOptions } from 'eslint-config-flat-gitignore'
+import type { ConfigWithExtends } from 'eslint-flat-config-utils'
 import type { Options as VueBlocksOptions } from 'eslint-processor-vue-blocks'
 
 import type { ConfigNames, RuleOptions } from './typegen'
@@ -11,14 +12,14 @@ export type Awaitable<T> = T | Promise<T>
 
 export type Rules = Record<string, Linter.RuleEntry<any> | undefined> & RuleOptions
 
-export type { ConfigNames }
+export type { ConfigNames, RuleOptions }
 
 /**
  * An updated version of ESLint's `Linter.Config`, which provides autocompletion
  * for `rules` and relaxes type limitations for `plugins` and `rules`, because
  * many plugins still lack proper type definitions.
  */
-export type TypedFlatConfigItem = Omit<Linter.Config, 'plugins' | 'rules'> & {
+export type TypedFlatConfigItem = Omit<ConfigWithExtends, 'plugins' | 'rules'> & {
   /**
    * An object containing a name-value mapping of plugin names to plugin objects.
    * When `files` is specified, these plugins are only available to the matching files.
@@ -141,6 +142,30 @@ export interface OptionsComponentExts {
   componentExts?: string[]
 }
 
+export interface OptionsE18e extends OptionsOverrides {
+  /**
+   * Include modernization rules
+   *
+   * @see https://github.com/e18e/eslint-plugin#modernization
+   * @default true
+   */
+  modernization?: boolean
+  /**
+   * Include module replacements rules
+   *
+   * @see https://github.com/e18e/eslint-plugin#module-replacements
+   * @default options.isInEditor
+   */
+  moduleReplacements?: boolean
+  /**
+   * Include performance improvements rules
+   *
+   * @see https://github.com/e18e/eslint-plugin#performance-improvements
+   * @default true
+   */
+  performanceImprovements?: boolean
+}
+
 export interface OptionsUnicorn extends OptionsOverrides {
   /**
    * Include all rules recommended by `eslint-plugin-unicorn`, instead of only ones picked by author.
@@ -150,31 +175,18 @@ export interface OptionsUnicorn extends OptionsOverrides {
   allRecommended?: boolean
 }
 
-export interface OptionsEffector extends OptionsOverrides {
+export interface OptionsMarkdown extends OptionsOverrides {
   /**
-   * Include react rules.
+   * Enable GFM (GitHub Flavored Markdown) support.
    *
-   * @default auto-detect based on the dependencies
+   * @default true
    */
-  react?: boolean
+  gfm?: boolean
+
   /**
-   * Include patronum rules.
-   *
-   * @default auto-detect based on the dependencies
+   * Override rules for markdown itself.
    */
-  patronum?: boolean
-  /**
-   * Include future rules.
-   *
-   * @default false
-   */
-  future?: boolean
-  /**
-   * Include scope rules.
-   *
-   * @default false
-   */
-  scope?: boolean
+  overridesMarkdown?: TypedFlatConfigItem['rules']
 }
 
 export interface OptionsReactNative extends OptionsOverrides {
@@ -387,6 +399,13 @@ export interface OptionsConfig
   jsx?: boolean | OptionsJSX
 
   /**
+   * Options for [@e18e/eslint-plugin](https://github.com/e18e/eslint-plugin)
+   *
+   * @default true
+   */
+  e18e?: boolean | OptionsE18e
+
+  /**
    * Options for eslint-plugin-unicorn.
    *
    * @default true
@@ -441,13 +460,13 @@ export interface OptionsConfig
   toml?: boolean | OptionsOverrides
 
   /**
-   * Enable linting for **code snippets** in Markdown.
+   * Enable linting for **code snippets** in Markdown and the markdown content itself.
    *
    * For formatting Markdown content, enable also `formatters.markdown`.
    *
    * @default true
    */
-  markdown?: boolean | OptionsOverrides
+  markdown?: boolean | OptionsMarkdown
 
   /**
    * Enable stylistic rules.
@@ -497,16 +516,6 @@ export interface OptionsConfig
    * @default auto-detect based on the dependencies
    */
   reactNative?: boolean | OptionsReactNative
-
-  /**
-   * Enable effector rules.
-   *
-   * Requires installing:
-   * - `eslint-plugin-effector`
-   *
-   * @default auto-detect based on the dependencies
-   */
-  effector?: boolean | OptionsEffector
 
   /**
    * Enable unocss rules.

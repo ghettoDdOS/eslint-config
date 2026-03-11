@@ -2,7 +2,7 @@
   "name": "@ghettoddos/eslint-config",
   "type": "module",
   "version": "4.0.0",
-  "packageManager": "pnpm@10.28.0",
+  "packageManager": "pnpm@10.32.1",
   "description": "ghettoDdOS ESLint config",
   "author": "ghettoDdOS <pen.egor2002@gamil.com> (https://github.com/ghettoDdOS/)",
   "license": "MIT",
@@ -26,33 +26,32 @@
     "dist"
   ],
   "scripts": {
-    "build": "pnpm typegen && tsdown --clean --dts",
+    "build": "nr gen && tsdown --clean --dts",
     "stub": "tsdown",
-    "dev": "pnpx @eslint/config-inspector --config eslint.config.ts",
-    "build:inspector": "pnpm build && pnpx @eslint/config-inspector build",
+    "dev": "nlx @eslint/config-inspector --config eslint.config.ts",
+    "build:inspector": "nr build && nlx @eslint/config-inspector build",
     "watch": "tsdown --watch",
     "lint": "eslint",
-    "typegen": "tsx scripts/typegen.ts",
-    "prepack": "pnpm build",
+    "gen": "tsx scripts/typegen.ts",
+    "prepack": "nr build",
     "release": "bumpp",
     "typecheck": "tsc --noEmit",
     "prepare": "simple-git-hooks"
   },
   "peerDependencies": {
-    "@eslint-react/eslint-plugin": "^2.0.1",
+    "@eslint-react/eslint-plugin": "^2.11.0",
     "@next/eslint-plugin-next": ">=15.0.0",
     "@prettier/plugin-xml": "^3.4.1",
     "@react-native/eslint-plugin": ">=0.80.0",
     "@unocss/eslint-plugin": ">=0.50.0",
-    "eslint": "^9.10.0",
+    "eslint": "^9.10.0 || ^10.0.0",
     "eslint-plugin-better-tailwindcss": "^4.0.0",
-    "eslint-plugin-effector": ">=0.15.0",
     "eslint-plugin-expo": "^0.1.4",
     "eslint-plugin-format": ">=0.1.0",
     "eslint-plugin-jsx-a11y": ">=6.10.2",
     "eslint-plugin-react-hooks": "^7.0.0",
     "eslint-plugin-react-native": ">=5.0.0",
-    "eslint-plugin-react-refresh": "^0.4.19",
+    "eslint-plugin-react-refresh": "^0.5.0",
     "eslint-plugin-vue": "^10.6.2",
     "eslint-plugin-vuejs-accessibility": "^2.4.1",
     "eslint-processor-vue-blocks": "^2.0.0",
@@ -75,9 +74,6 @@
       "optional": true
     },
     "eslint-plugin-better-tailwindcss": {
-      "optional": true
-    },
-    "eslint-plugin-effector": {
       "optional": true
     },
     "eslint-plugin-expo": {
@@ -114,8 +110,8 @@
   "dependencies": {
     "@antfu/install-pkg": "catalog:prod",
     "@clack/prompts": "catalog:prod",
+    "@e18e/eslint-plugin": "catalog:prod",
     "@eslint-community/eslint-plugin-eslint-comments": "catalog:prod",
-    "@eslint/compat": "catalog:prod",
     "@eslint/markdown": "catalog:prod",
     "@stylistic/eslint-plugin": "catalog:prod",
     "@typescript-eslint/eslint-plugin": "catalog:prod",
@@ -139,13 +135,13 @@
     "eslint-plugin-unused-imports": "catalog:prod",
     "eslint-plugin-yml": "catalog:prod",
     "globals": "catalog:prod",
-    "jsonc-eslint-parser": "catalog:prod",
     "local-pkg": "catalog:prod",
     "parse-gitignore": "catalog:prod",
     "toml-eslint-parser": "catalog:prod",
     "yaml-eslint-parser": "catalog:prod"
   },
   "devDependencies": {
+    "@antfu/ni": "catalog:dev",
     "@commitlint/cli": "catalog:dev",
     "@commitlint/config-conventional": "catalog:dev",
     "@eslint-react/eslint-plugin": "catalog:peer",
@@ -170,6 +166,7 @@
     "eslint-processor-vue-blocks": "catalog:peer",
     "eslint-typegen": "catalog:dev",
     "find-up-simple": "catalog:inline",
+    "jiti": "catalog:dev",
     "lint-staged": "catalog:dev",
     "pnpm-workspace-yaml": "catalog:dev",
     "simple-git-hooks": "catalog:dev",
@@ -179,6 +176,16 @@
     "vitest": "catalog:dev",
     "vue": "catalog:peer",
     "vue-eslint-parser": "catalog:peer"
+  },
+  "resolutions": {
+    "@eslint-community/eslint-utils": "catalog:peer",
+    "@typescript-eslint/types": "catalog:peer",
+    "@typescript-eslint/utils": "catalog:peer",
+    "chokidar": "catalog:dev",
+    "eslint": "catalog:peer",
+    "semver": "catalog:dev",
+    "synckit": "catalog:dev",
+    "tsx": "catalog:dev"
   },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged",

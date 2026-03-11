@@ -118,7 +118,7 @@ Add the following settings to your `.vscode/settings.json`:
 </details>
 
 <details>
-<summary>🟦 Zed support</summary>
+<summary>🔲 Zed support</summary>
 
 <br>
 
@@ -132,8 +132,7 @@ Add the following settings to your `.zed/settings.json`:
   // Auto fix
   "formatter": {
     "code_actions": {
-      "source.fixAll.eslint": true,
-      "source.organizeImports": false
+      "source.fixAll.eslint": true
     }
   },
 

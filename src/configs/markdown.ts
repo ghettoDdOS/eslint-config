@@ -1,7 +1,7 @@
 import type {
   OptionsComponentExts,
   OptionsFiles,
-  OptionsOverrides,
+  OptionsMarkdown,
   TypedFlatConfigItem,
 } from '../types'
 
@@ -12,15 +12,17 @@ import {
   GLOB_MARKDOWN_CODE,
   GLOB_MARKDOWN_IN_MARKDOWN,
 } from '../globs'
-import { interopDefault, parserPlain } from '../utils'
+import { interopDefault } from '../utils'
 
 export async function markdown(
-  options: OptionsFiles & OptionsComponentExts & OptionsOverrides = {},
+  options: OptionsFiles & OptionsComponentExts & OptionsMarkdown = {},
 ): Promise<TypedFlatConfigItem[]> {
   const {
     componentExts = [],
     files = [GLOB_MARKDOWN],
+    gfm = true,
     overrides = {},
+    overridesMarkdown = {},
   } = options
 
   const markdown = await interopDefault(import('@eslint/markdown'))
@@ -46,10 +48,35 @@ export async function markdown(
     },
     {
       files,
-      languageOptions: {
-        parser: parserPlain,
-      },
+      language: gfm ? 'markdown/gfm' : 'markdown/commonmark',
       name: 'markdown/parser',
+    },
+    {
+      files,
+      name: 'markdown/rules',
+      rules: {
+        ...markdown.configs.recommended.at(0)?.rules,
+        'markdown/fenced-code-language': 'off',
+        // https://github.com/eslint/markdown/issues/294
+        'markdown/no-missing-label-refs': 'off',
+        ...overridesMarkdown,
+      },
+    },
+    {
+      files,
+      name: 'markdown/disables/markdown',
+      rules: {
+        // Disable rules do not work with markdown sourcecode.
+        'command/command': 'off',
+        'no-irregular-whitespace': 'off',
+        'perfectionist/sort-exports': 'off',
+        'perfectionist/sort-imports': 'off',
+        'regexp/no-legacy-features': 'off',
+        'regexp/no-missing-g-flag': 'off',
+        'regexp/no-useless-dollar-replacements': 'off',
+        'regexp/no-useless-flag': 'off',
+        'style/indent': 'off',
+      },
     },
     {
       files: [
@@ -63,7 +90,7 @@ export async function markdown(
           },
         },
       },
-      name: 'markdown/disables',
+      name: 'markdown/disables/code',
       rules: {
         'antfu/no-top-level-await': 'off',
 

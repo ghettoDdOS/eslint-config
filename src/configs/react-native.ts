@@ -85,7 +85,18 @@ export async function reactNative(
 
         'react-native/no-deep-imports': 'error',
 
-        'ts/no-require-imports': 'off',
+        'ts/no-require-imports': [
+          'warn',
+          {
+          // Allow supported asset extensions:
+          // https://github.com/facebook/metro/blob/9e1a6da5a7cd71bb9243f45644efe655870e5fff/packages/metro-config/src/defaults/defaults.js#L18-L53
+          // https://github.com/expo/expo/blob/c774cfaa7898098411fc7e09dcb409b7cb5064f9/packages/%40expo/metro-config/src/ExpoMetroConfig.ts#L247-L254
+          // Includes json which can be imported both as source and asset.
+            allow: [
+              '\\.(aac|aiff|avif|bmp|caf|db|gif|heic|html|jpeg|jpg|json|m4a|m4v|mov|mp3|mp4|mpeg|mpg|otf|pdf|png|psd|svg|ttf|wav|webm|webp|xml|yaml|yml|zip)$',
+            ],
+          },
+        ],
 
         ...expo
           ? {

@@ -15,7 +15,6 @@ import {
   command,
   comments,
   disables,
-  effector,
   ignores,
   imports,
   javascript,
@@ -41,6 +40,7 @@ import {
   vue,
   yaml,
 } from './configs'
+import { e18e } from './configs/e18e'
 import { formatters } from './configs/formatters'
 import { regexp } from './configs/regexp'
 import {
@@ -105,7 +105,7 @@ export function config(
   const {
     autoRenamePlugins = true,
     componentExts = [],
-    effector: enableEffector = isPackageExists('effector'),
+    e18e: enableE18e = true,
     gitignore: enableGitignore = true,
     ignores: userIgnores = [],
     imports: enableImports = true,
@@ -175,7 +175,7 @@ export function config(
 
   // Base configs
   configs.push(
-    ignores(userIgnores),
+    ignores(userIgnores, !enableTypeScript),
     javascript({
       isInEditor,
       overrides: getOverrides(options, 'javascript'),
@@ -206,6 +206,15 @@ export function config(
       imports({
         stylistic: stylisticOptions,
         ...resolveSubOptions(options, 'imports'),
+      }),
+    )
+  }
+
+  if (enableE18e) {
+    configs.push(
+      e18e({
+        isInEditor,
+        ...enableE18e === true ? {} : enableE18e,
       }),
     )
   }
@@ -294,15 +303,6 @@ export function config(
     configs.push(
       nextjs({
         overrides: getOverrides(options, 'nextjs'),
-      }),
-    )
-  }
-
-  if (enableEffector) {
-    configs.push(
-      effector({
-        ...resolveSubOptions(options, 'effector'),
-        overrides: getOverrides(options, 'effector'),
       }),
     )
   }

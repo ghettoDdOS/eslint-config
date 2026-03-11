@@ -27,7 +27,7 @@ import { StylisticConfigDefaults } from './stylistic'
 
 function mergePrettierOptions(
   options: VendoredPrettierOptions,
-  overrides: VendoredPrettierRuleOptions = {},
+  overrides: VendoredPrettierRuleOptions,
 ): VendoredPrettierRuleOptions {
   return {
     ...options,

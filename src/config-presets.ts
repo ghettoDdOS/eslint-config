@@ -2,7 +2,6 @@ import type { OptionsConfig } from './types'
 
 // @keep-sorted
 export const CONFIG_PRESET_FULL_ON: OptionsConfig = {
-  effector: { future: true, patronum: true, react: true, scope: true },
   formatters: true,
   gitignore: true,
   imports: true,
@@ -39,7 +38,6 @@ export const CONFIG_PRESET_FULL_ON: OptionsConfig = {
 }
 
 export const CONFIG_PRESET_FULL_OFF: OptionsConfig = {
-  effector: false,
   formatters: false,
   gitignore: false,
   imports: false,
