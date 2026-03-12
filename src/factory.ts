@@ -118,7 +118,8 @@ export function config(
     reactNative: enableReactNative = ReactNativePackages.some(i => isPackageExists(i)),
     regexp: enableRegexp = true,
     tailwindcss: enableTailwindCSS = isPackageExists('tailwindcss'),
-    typescript: enableTypeScript = isPackageExists('typescript'),
+    type: appType = 'app',
+    typescript: enableTypeScript = isPackageExists('typescript') || isPackageExists('@typescript/native-preview'),
     unicorn: enableUnicorn = true,
     unocss: enableUnoCSS = isPackageExists('unocss'),
     vue: enableVue = VuePackages.some(i => isPackageExists(i)),
@@ -241,7 +242,7 @@ export function config(
         ...typescriptOptions,
         componentExts,
         overrides: getOverrides(options, 'typescript'),
-        type: options.type,
+        type: appType,
       }),
     )
   }
