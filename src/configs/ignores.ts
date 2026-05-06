@@ -12,6 +12,7 @@ export async function ignores(
 
   if (ignoreTypeScript)
     ignores.push(GLOB_TS, GLOB_TSX)
+
   if (typeof userIgnores === 'function') {
     ignores = userIgnores(ignores)
   }
@@ -21,6 +22,7 @@ export async function ignores(
       ...userIgnores,
     ]
   }
+
   return [
     {
       ignores,

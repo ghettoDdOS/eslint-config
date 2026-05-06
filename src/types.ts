@@ -3,8 +3,8 @@ import type { ParserOptions } from '@typescript-eslint/parser'
 import type { Linter } from 'eslint'
 import type { FlatGitignoreOptions } from 'eslint-config-flat-gitignore'
 import type { ConfigWithExtends } from 'eslint-flat-config-utils'
+import type { Selector } from 'eslint-plugin-better-tailwindcss/types'
 import type { Options as VueBlocksOptions } from 'eslint-processor-vue-blocks'
-
 import type { ConfigNames, RuleOptions } from './typegen'
 import type { VendoredPrettierOptions } from './vendor/prettier-types'
 
@@ -42,23 +42,6 @@ export interface OptionsFiles {
   files?: string[]
 }
 
-export interface OptionsJSXA11y extends OptionsOverrides {
-  // Add future a11y-specific options here
-}
-
-export interface OptionsJSX {
-  /**
-   * Enable JSX accessibility rules.
-   *
-   * Requires installing:
-   * - `eslint-plugin-jsx-a11y`
-   *
-   * Can be a boolean or an object for custom options and overrides.
-   * @default false
-   */
-  a11y?: boolean | OptionsJSXA11y
-}
-
 export interface OptionsVue extends OptionsOverrides {
   /**
    * Create virtual files for Vue SFC blocks to enable linting.
@@ -84,6 +67,23 @@ export interface OptionsVue extends OptionsOverrides {
   a11y?: boolean
 }
 
+export interface OptionsJSXA11y extends OptionsOverrides {
+  // Add future a11y-specific options here
+}
+
+export interface OptionsJSX {
+  /**
+   * Enable JSX accessibility rules.
+   *
+   * Requires installing:
+   * - `eslint-plugin-jsx-a11y`
+   *
+   * Can be a boolean or an object for custom options and overrides.
+   * @default false
+   */
+  a11y?: boolean | OptionsJSXA11y
+}
+
 export type OptionsTypescript
   = (OptionsTypeScriptWithTypes & OptionsOverrides & OptionsTypeScriptErasableOnly)
     | (OptionsTypeScriptParserOptions & OptionsOverrides & OptionsTypeScriptErasableOnly)
@@ -91,38 +91,33 @@ export type OptionsTypescript
 export interface OptionsFormatters {
   /**
    * Enable formatting support for CSS, Less, Sass, and SCSS.
-   *
-   * Currently only support Prettier.
    */
-  css?: 'prettier' | boolean
+  css?: boolean
 
   /**
    * Enable formatting support for HTML.
-   *
-   * Currently only support Prettier.
    */
-  html?: 'prettier' | boolean
+  html?: boolean
 
   /**
    * Enable formatting support for XML.
-   *
-   * Currently only support Prettier.
    */
-  xml?: 'prettier' | boolean
+  xml?: boolean
 
   /**
    * Enable formatting support for SVG.
-   *
-   * Currently only support Prettier.
    */
-  svg?: 'prettier' | boolean
+  svg?: boolean
 
   /**
    * Enable formatting support for Markdown.
-   *
-   * Currently only support Prettier.
    */
-  markdown?: 'prettier' | boolean
+  markdown?: boolean
+
+  /**
+   * Enable formatting support for GraphQL.
+   */
+  graphql?: boolean
 
   /**
    * Custom options for Prettier.
@@ -140,6 +135,12 @@ export interface OptionsComponentExts {
    * @default []
    */
   componentExts?: string[]
+}
+
+export interface OptionsBaseline extends OptionsOverrides {
+  baseline?: 'widely' | 'newly' | number
+  available?: 'widely' | 'newly' | number
+  ignoreFeatures?: string[]
 }
 
 export interface OptionsE18e extends OptionsOverrides {
@@ -168,7 +169,7 @@ export interface OptionsE18e extends OptionsOverrides {
 
 export interface OptionsUnicorn extends OptionsOverrides {
   /**
-   * Include all rules recommended by `eslint-plugin-unicorn`, instead of only ones picked by author.
+   * Include all rules recommended by `eslint-plugin-unicorn`, instead of only ones picked by Anthony.
    *
    * @default false
    */
@@ -187,18 +188,6 @@ export interface OptionsMarkdown extends OptionsOverrides {
    * Override rules for markdown itself.
    */
   overridesMarkdown?: TypedFlatConfigItem['rules']
-}
-
-export interface OptionsReactNative extends OptionsOverrides {
-  /**
-   * Enable expo rules.
-   *
-   * Requires installing:
-   * - `eslint-plugin-expo`
-   *
-   * @default auto-detect based on the dependencies
-   */
-  expo?: boolean
 }
 
 export interface OptionsTypeScriptParserOptions {
@@ -242,10 +231,18 @@ export interface OptionsStylistic {
 }
 
 export interface StylisticConfig
-  extends Pick<
-    StylisticCustomizeOptions,
-    'indent' | 'quotes' | 'jsx' | 'semi' | 'experimental'
-  > {}
+  extends Pick<StylisticCustomizeOptions, 'indent' | 'quotes' | 'jsx' | 'semi' | 'experimental'> {
+  /**
+   * Specify the maximum line length.
+   * @default 100
+   */
+  printWidth?: number
+  /**
+   * Specify the character width for tab characters.
+   * @default 4
+   */
+  tabWidth?: number
+}
 
 export interface OptionsOverrides {
   overrides?: TypedFlatConfigItem['rules']
@@ -324,23 +321,40 @@ export interface OptionsUnoCSS extends OptionsOverrides {
   strict?: boolean
 }
 
-export interface OptionsReact extends OptionsOverrides {
-  reactCompiler?: boolean
-}
-
 export interface OptionsTailwindCSS extends OptionsOverrides {
   /**
    * The path to the entry file of the css based tailwind config
    *
-   * @see https://github.com/schoero/eslint-plugin-better-tailwindcss/tree/main?tab=readme-ov-file#quick-start
+   * @see https://github.com/schoero/eslint-plugin-better-tailwindcss/blob/main/docs/settings/settings.md#entrypoint
    * @example `src/global.css`
    */
-  entryPoint?: string
+  entryPoint: string
+  /**
+   * Tailwind CSS v4 allows you to define custom component classes like card, btn, badge etc.
+   *
+   * @see https://github.com/schoero/eslint-plugin-better-tailwindcss/blob/main/docs/settings/settings.md#detectcomponentclasses
+   * @default false
+   */
+  detectComponentClasses?: boolean
+  /**
+   * The font size of the <html> element in pixels.
+   *
+   * @see https://github.com/schoero/eslint-plugin-better-tailwindcss/blob/main/docs/settings/settings.md#rootfontsize
+   * @default 16
+   */
+  rootFontSize?: number
+  /**
+   * Flat list of selectors that determines where Tailwind class strings are linted.
+   *
+   * @see https://github.com/schoero/eslint-plugin-better-tailwindcss/blob/main/docs/settings/settings.md#selectors
+   */
+  selectors?: Selector[]
 }
 
-export interface OptionsConfig
-  extends OptionsComponentExts,
-  OptionsProjectType {
+export interface OptionsReact extends OptionsOverrides {
+}
+
+export interface OptionsConfig extends OptionsComponentExts, OptionsProjectType {
   /**
    * Enable gitignore support.
    *
@@ -360,6 +374,17 @@ export interface OptionsConfig
    * @default []
    */
   ignores?: string[] | ((originals: string[]) => string[])
+
+  /**
+   * Disable some opinionated rules to Anthony's preference.
+   *
+   * Including:
+   * - `antfu/top-level-function`
+   * - `antfu/if-newline`
+   *
+   * @default false
+   */
+  lessOpinionated?: boolean
 
   /**
    * Core rules. Can't be disabled.
@@ -397,6 +422,20 @@ export interface OptionsConfig
    * @default true
    */
   jsx?: boolean | OptionsJSX
+
+  /**
+   * Options for [eslint-plugin-baseline-js](https://github.com/3ru/eslint-plugin-baseline-js)
+   *
+   * @default false
+   */
+  baseline?: boolean | OptionsBaseline
+
+  /**
+   * Options for [eslint-plugin-sonarjs](https://npmx.dev/package/eslint-plugin-sonarjs)
+   *
+   * @default false
+   */
+  sonarjs?: boolean | OptionsOverrides
 
   /**
    * Options for [@e18e/eslint-plugin](https://github.com/e18e/eslint-plugin)
@@ -489,7 +528,6 @@ export interface OptionsConfig
    *
    * Requires installing:
    * - `@eslint-react/eslint-plugin`
-   * - `eslint-plugin-react-hooks`
    * - `eslint-plugin-react-refresh`
    *
    * @default auto-detect based on the dependencies
@@ -497,7 +535,7 @@ export interface OptionsConfig
   react?: boolean | OptionsReact
 
   /**
-   * Enable next rules.
+   * Enable nextjs rules.
    *
    * Requires installing:
    * - `@next/eslint-plugin-next`
@@ -507,23 +545,12 @@ export interface OptionsConfig
   nextjs?: boolean | OptionsOverrides
 
   /**
-   * Enable react-native rules.
-   *
-   * Requires installing:
-   * - `@react-native/eslint-plugin`
-   * - `eslint-plugin-react-native`
-   *
-   * @default auto-detect based on the dependencies
-   */
-  reactNative?: boolean | OptionsReactNative
-
-  /**
    * Enable unocss rules.
    *
    * Requires installing:
    * - `@unocss/eslint-plugin`
    *
-   * @default auto-detect based on the dependencies
+   * @default false
    */
   unocss?: boolean | OptionsUnoCSS
 
@@ -533,9 +560,9 @@ export interface OptionsConfig
    * Requires installing:
    * - `eslint-plugin-better-tailwindcss`
    *
-   * @default auto-detect based on the dependencies
+   * @default false
    */
-  tailwindcss?: boolean | OptionsTailwindCSS
+  tailwindcss?: false | OptionsTailwindCSS
 
   /**
    * Enable pnpm (workspace/catalogs) support.
@@ -573,21 +600,4 @@ export interface OptionsConfig
    * @default true
    */
   autoRenamePlugins?: boolean
-
-  /**
-   * Provide overrides for rules for each integration.
-   *
-   * @deprecated use `overrides` option in each integration key instead
-   */
-  overrides?: {
-    stylistic?: TypedFlatConfigItem['rules']
-    javascript?: TypedFlatConfigItem['rules']
-    typescript?: TypedFlatConfigItem['rules']
-    vue?: TypedFlatConfigItem['rules']
-    jsonc?: TypedFlatConfigItem['rules']
-    markdown?: TypedFlatConfigItem['rules']
-    yaml?: TypedFlatConfigItem['rules']
-    toml?: TypedFlatConfigItem['rules']
-    react?: TypedFlatConfigItem['rules']
-  }
 }

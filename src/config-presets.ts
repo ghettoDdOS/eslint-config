@@ -2,6 +2,7 @@ import type { OptionsConfig } from './types'
 
 // @keep-sorted
 export const CONFIG_PRESET_FULL_ON: OptionsConfig = {
+  baseline: true,
   formatters: true,
   gitignore: true,
   imports: true,
@@ -14,15 +15,13 @@ export const CONFIG_PRESET_FULL_ON: OptionsConfig = {
   nextjs: true,
   node: true,
   pnpm: true,
-  react: {
-    reactCompiler: true,
-  },
-  reactNative: { expo: true },
+  react: true,
   regexp: true,
+  sonarjs: true,
   stylistic: {
     experimental: true,
   },
-  tailwindcss: true,
+  tailwindcss: { entryPoint: 'fixtures/stub.css' },
   test: true,
   toml: true,
   typescript: {
@@ -38,6 +37,7 @@ export const CONFIG_PRESET_FULL_ON: OptionsConfig = {
 }
 
 export const CONFIG_PRESET_FULL_OFF: OptionsConfig = {
+  baseline: false,
   formatters: false,
   gitignore: false,
   imports: false,
@@ -49,8 +49,8 @@ export const CONFIG_PRESET_FULL_OFF: OptionsConfig = {
   node: false,
   pnpm: false,
   react: false,
-  reactNative: false,
   regexp: false,
+  sonarjs: false,
   stylistic: false,
   tailwindcss: false,
   test: false,

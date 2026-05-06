@@ -1,20 +1,18 @@
 import type { Linter } from 'eslint'
-
-import type {
-  Awaitable,
-  ConfigNames,
-  OptionsConfig,
-  TypedFlatConfigItem,
-} from './types'
+import type { RuleOptions } from './typegen'
+import type { Awaitable, ConfigNames, OptionsConfig, TypedFlatConfigItem } from './types'
 
 import { FlatConfigComposer } from 'eslint-flat-config-utils'
 import { findUpSync } from 'find-up-simple'
 import { isPackageExists } from 'local-pkg'
-
 import {
+  baseline,
   command,
   comments,
+  deMorgan,
   disables,
+  e18e,
+  formatters,
   ignores,
   imports,
   javascript,
@@ -26,8 +24,10 @@ import {
   node,
   perfectionist,
   pnpm,
+  preferEarlyReturn,
   react,
-  reactNative,
+  regexp,
+  sonarjs,
   sortPackageJson,
   sortTsconfig,
   stylistic,
@@ -40,21 +40,8 @@ import {
   vue,
   yaml,
 } from './configs'
-import { e18e } from './configs/e18e'
-import { formatters } from './configs/formatters'
-import { regexp } from './configs/regexp'
-import {
-  NextJsPackages,
-  ReactNativePackages,
-  ReactPackages,
-  VuePackages,
-} from './constants'
-import {
-  getOverrides,
-  interopDefault,
-  isInEditorEnv,
-  resolveSubOptions,
-} from './utils'
+import { GLOB_MARKDOWN } from './globs'
+import { interopDefault, isInEditorEnv } from './utils'
 
 const flatConfigProps = [
   'name',
@@ -66,16 +53,19 @@ const flatConfigProps = [
   'settings',
 ] satisfies (keyof TypedFlatConfigItem)[]
 
+const VuePackages = [
+  'vue',
+  'nuxt',
+  'vitepress',
+  '@slidev/cli',
+]
+
 export const defaultPluginRenaming = {
   '@eslint-react': 'react',
-  '@eslint-react/dom': 'react-dom',
-  '@eslint-react/hooks-extra': 'react-hooks-extra',
-  '@eslint-react/naming-convention': 'react-naming-convention',
 
   '@next/next': 'next',
   '@stylistic': 'style',
   '@typescript-eslint': 'ts',
-  'better-tailwindcss': 'tailwindcss',
   'import-lite': 'import',
   'n': 'node',
   'vitest': 'test',
@@ -96,14 +86,12 @@ export const defaultPluginRenaming = {
 export function config(
   options: OptionsConfig & Omit<TypedFlatConfigItem, 'files' | 'ignores'> = {},
   ...userConfigs: Awaitable<
-    | TypedFlatConfigItem
-    | TypedFlatConfigItem[]
-    | FlatConfigComposer<any, any>
-    | Linter.Config[]
+     TypedFlatConfigItem | TypedFlatConfigItem[] | FlatConfigComposer<any, any> | Linter.Config[]
   >[]
 ): FlatConfigComposer<TypedFlatConfigItem, ConfigNames> {
   const {
     autoRenamePlugins = true,
+    baseline: enableBaseLineJs = false,
     componentExts = [],
     e18e: enableE18e = true,
     gitignore: enableGitignore = true,
@@ -111,17 +99,18 @@ export function config(
     imports: enableImports = true,
     jsdoc: enableJsdoc = true,
     jsx: enableJsx = true,
-    nextjs: enableNext = NextJsPackages.some(i => isPackageExists(i)),
+    nextjs: enableNextjs = isPackageExists('next'),
     node: enableNode = true,
     pnpm: enableCatalogs = !!findUpSync('pnpm-workspace.yaml'),
-    react: enableReact = ReactPackages.some(i => isPackageExists(i)),
-    reactNative: enableReactNative = ReactNativePackages.some(i => isPackageExists(i)),
+    react: enableReact = false,
     regexp: enableRegexp = true,
+    sonarjs: enableSonarJs = false,
     tailwindcss: enableTailwindCSS = isPackageExists('tailwindcss'),
     type: appType = 'app',
-    typescript: enableTypeScript = isPackageExists('typescript') || isPackageExists('@typescript/native-preview'),
+    typescript: enableTypeScript = isPackageExists('typescript')
+      || isPackageExists('@typescript/native-preview'),
     unicorn: enableUnicorn = true,
-    unocss: enableUnoCSS = isPackageExists('unocss'),
+    unocss: enableUnoCSS = false,
     vue: enableVue = VuePackages.some(i => isPackageExists(i)),
   } = options
 
@@ -136,16 +125,14 @@ export function config(
     }
   }
 
-  const stylisticOptions
-    = options.stylistic === false
-      ? false
-      : typeof options.stylistic === 'object'
-        ? options.stylistic
-        : {}
+  const stylisticOptions = options.stylistic === false
+    ? false
+    : typeof options.stylistic === 'object'
+      ? options.stylistic
+      : {}
 
-  if (stylisticOptions && !('jsx' in stylisticOptions)) {
+  if (stylisticOptions && !('jsx' in stylisticOptions))
     stylisticOptions.jsx = typeof enableJsx === 'object' ? true : enableJsx
-  }
 
   const configs: Awaitable<TypedFlatConfigItem[]>[] = []
 
@@ -170,9 +157,7 @@ export function config(
 
   const typescriptOptions = resolveSubOptions(options, 'typescript')
   const tsconfigPath
-    = 'tsconfigPath' in typescriptOptions
-      ? typescriptOptions.tsconfigPath
-      : undefined
+    = 'tsconfigPath' in typescriptOptions ? typescriptOptions.tsconfigPath : undefined
 
   // Base configs
   configs.push(
@@ -183,6 +168,8 @@ export function config(
     }),
     comments(),
     command(),
+    deMorgan(),
+    preferEarlyReturn(),
 
     // Optional plugins (installed but not enabled by default)
     perfectionist(),
@@ -211,11 +198,27 @@ export function config(
     )
   }
 
+  if (enableBaseLineJs) {
+    configs.push(
+      baseline({
+        ...resolveSubOptions(options, 'baseline'),
+      }),
+    )
+  }
+
   if (enableE18e) {
     configs.push(
       e18e({
         isInEditor,
         ...enableE18e === true ? {} : enableE18e,
+      }),
+    )
+  }
+
+  if (enableSonarJs) {
+    configs.push(
+      sonarjs({
+        ...resolveSubOptions(options, 'sonarjs'),
       }),
     )
   }
@@ -251,13 +254,16 @@ export function config(
     configs.push(
       stylistic({
         ...stylisticOptions,
+        lessOpinionated: options.lessOpinionated,
         overrides: getOverrides(options, 'stylistic'),
       }),
     )
   }
 
   if (enableRegexp) {
-    configs.push(regexp(typeof enableRegexp === 'boolean' ? {} : enableRegexp))
+    configs.push(
+      regexp(typeof enableRegexp === 'boolean' ? {} : enableRegexp),
+    )
   }
 
   if (options.test ?? true) {
@@ -291,16 +297,7 @@ export function config(
     )
   }
 
-  if (enableReactNative) {
-    configs.push(
-      reactNative({
-        ...resolveSubOptions(options, 'reactNative'),
-        overrides: getOverrides(options, 'reactNative'),
-      }),
-    )
-  }
-
-  if (enableNext) {
+  if (enableNextjs) {
     configs.push(
       nextjs({
         overrides: getOverrides(options, 'nextjs'),
@@ -387,46 +384,86 @@ export function config(
     )
   }
 
-  configs.push(disables())
+  configs.push(
+    disables(),
+  )
 
   if ('files' in options) {
     throw new Error(
-      '[@ghettoddos/eslint-config] The first argument should not contain the "files" property as the options are supposed to be global. Place it in the second or later config instead.',
+      '[@ghettoddos/eslint-config] '
+      + 'The first argument should not contain the "files" property '
+      + 'as the options are supposed to be global. '
+      + 'Place it in the second or later config instead.',
     )
   }
 
   // User can optionally pass a flat config item to the first argument
   // We pick the known keys as ESLint would do schema validation
   const fusedConfig = flatConfigProps.reduce((acc, key) => {
-    if (key in options) {
+    if (key in options)
       acc[key] = options[key] as any
-    }
     return acc
   }, {} as TypedFlatConfigItem)
-  if (Object.keys(fusedConfig).length) {
+  if (Object.keys(fusedConfig).length)
     configs.push([fusedConfig])
-  }
 
   let composer = new FlatConfigComposer<TypedFlatConfigItem, ConfigNames>()
 
-  composer = composer.append(...configs, ...(userConfigs as any))
+  composer = composer
+    .append(
+      ...configs,
+      ...userConfigs as any,
+    )
+
+  // Markdown uses the `markdown/gfm` language, whose `SourceCode` lacks JS-only
+  // methods like `getAllComments`. Without this, any rule override registered
+  // without a `files` constraint would apply globally and crash on `.md` files.
+  // See https://github.com/antfu/eslint-config/issues/837.
+  if (options.markdown ?? true) {
+    composer = composer.setDefaultIgnores(prev => [...prev, GLOB_MARKDOWN])
+  }
 
   if (autoRenamePlugins) {
-    composer = composer.renamePlugins(defaultPluginRenaming)
+    composer = composer
+      .renamePlugins(defaultPluginRenaming)
   }
 
   if (isInEditor) {
-    composer = composer.disableRulesFix([
-      'unused-imports/no-unused-imports',
-      'test/no-only-tests',
-      'prefer-const',
-    ], {
-      builtinRules: () =>
-        import(['eslint', 'use-at-your-own-risk'].join('/')).then(
-          r => r.builtinRules,
-        ),
-    })
+    composer = composer
+      .disableRulesFix([
+        'unused-imports/no-unused-imports',
+        'test/no-only-tests',
+        'prefer-const',
+      ], {
+        builtinRules: () =>
+          import(['eslint', 'use-at-your-own-risk'].join('/')).then(r => r.builtinRules),
+      })
   }
 
   return composer
+}
+
+export type ResolvedOptions<T> = T extends boolean
+  ? never
+  : NonNullable<T>
+
+export function resolveSubOptions<K extends keyof OptionsConfig>(
+  options: OptionsConfig,
+  key: K,
+): ResolvedOptions<OptionsConfig[K]> {
+  return typeof options[key] === 'boolean'
+    ? {} as any
+    : options[key] || {} as any
+}
+
+export function getOverrides<K extends keyof OptionsConfig>(
+  options: OptionsConfig,
+  key: K,
+): Partial<Linter.RulesRecord & RuleOptions> {
+  const sub = resolveSubOptions(options, key)
+  return {
+    ...'overrides' in sub
+      ? sub.overrides
+      : {},
+  }
 }

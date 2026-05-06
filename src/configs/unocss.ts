@@ -5,11 +5,19 @@ import { ensurePackages, interopDefault } from '../utils'
 export async function unocss(
   options: OptionsUnoCSS = {},
 ): Promise<TypedFlatConfigItem[]> {
-  const { attributify = true, overrides = {}, strict = false } = options
+  const {
+    attributify = true,
+    overrides = {},
+    strict = false,
+  } = options
 
-  await ensurePackages(['@unocss/eslint-plugin'])
+  await ensurePackages([
+    '@unocss/eslint-plugin',
+  ])
 
-  const [pluginUnoCSS] = await Promise.all([
+  const [
+    pluginUnoCSS,
+  ] = await Promise.all([
     interopDefault(import('@unocss/eslint-plugin')),
   ] as const)
 
@@ -21,16 +29,16 @@ export async function unocss(
       },
       rules: {
         'unocss/order': 'warn',
-        ...(attributify
+        ...attributify
           ? {
               'unocss/order-attributify': 'warn',
             }
-          : {}),
-        ...(strict
+          : {},
+        ...strict
           ? {
               'unocss/blocklist': 'error',
             }
-          : {}),
+          : {},
 
         ...overrides,
       },

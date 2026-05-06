@@ -2,7 +2,7 @@
   "name": "@ghettoddos/eslint-config",
   "type": "module",
   "version": "4.1.1",
-  "packageManager": "pnpm@10.32.1",
+  "packageManager": "pnpm@10.33.4",
   "description": "ghettoDdOS ESLint config",
   "author": "ghettoDdOS <pen.egor2002@gamil.com> (https://github.com/ghettoDdOS/)",
   "license": "MIT",
@@ -39,18 +39,14 @@
     "prepare": "simple-git-hooks"
   },
   "peerDependencies": {
-    "@eslint-react/eslint-plugin": "^2.11.0",
+    "@eslint-react/eslint-plugin": "^3.0.0",
     "@next/eslint-plugin-next": ">=15.0.0",
     "@prettier/plugin-xml": "^3.4.1",
-    "@react-native/eslint-plugin": ">=0.80.0",
     "@unocss/eslint-plugin": ">=0.50.0",
     "eslint": "^9.10.0 || ^10.0.0",
     "eslint-plugin-better-tailwindcss": "^4.0.0",
-    "eslint-plugin-expo": "^0.1.4",
     "eslint-plugin-format": ">=0.1.0",
     "eslint-plugin-jsx-a11y": ">=6.10.2",
-    "eslint-plugin-react-hooks": "^7.0.0",
-    "eslint-plugin-react-native": ">=5.0.0",
     "eslint-plugin-react-refresh": "^0.5.0",
     "eslint-plugin-vue": "^10.6.2",
     "eslint-plugin-vuejs-accessibility": "^2.4.1",
@@ -67,28 +63,16 @@
     "@prettier/plugin-xml": {
       "optional": true
     },
-    "@react-native/eslint-plugin": {
-      "optional": true
-    },
     "@unocss/eslint-plugin": {
       "optional": true
     },
     "eslint-plugin-better-tailwindcss": {
       "optional": true
     },
-    "eslint-plugin-expo": {
-      "optional": true
-    },
     "eslint-plugin-format": {
       "optional": true
     },
     "eslint-plugin-jsx-a11y": {
-      "optional": true
-    },
-    "eslint-plugin-react-hooks": {
-      "optional": true
-    },
-    "eslint-plugin-react-native": {
       "optional": true
     },
     "eslint-plugin-react-refresh": {
@@ -121,7 +105,9 @@
     "eslint-flat-config-utils": "catalog:prod",
     "eslint-merge-processors": "catalog:prod",
     "eslint-plugin-antfu": "catalog:prod",
+    "eslint-plugin-baseline-js": "catalog:prod",
     "eslint-plugin-command": "catalog:prod",
+    "eslint-plugin-de-morgan": "catalog:prod",
     "eslint-plugin-import-lite": "catalog:prod",
     "eslint-plugin-jsdoc": "catalog:prod",
     "eslint-plugin-jsonc": "catalog:prod",
@@ -130,6 +116,7 @@
     "eslint-plugin-perfectionist": "catalog:prod",
     "eslint-plugin-pnpm": "catalog:prod",
     "eslint-plugin-regexp": "catalog:prod",
+    "eslint-plugin-sonarjs": "catalog:prod",
     "eslint-plugin-toml": "catalog:prod",
     "eslint-plugin-unicorn": "catalog:prod",
     "eslint-plugin-unused-imports": "catalog:prod",
@@ -149,17 +136,16 @@
     "@ghettoddos/eslint-config": "workspace:*",
     "@next/eslint-plugin-next": "catalog:peer",
     "@prettier/plugin-xml": "catalog:peer",
-    "@react-native/eslint-plugin": "catalog:peer",
     "@types/eslint-plugin-jsx-a11y": "catalog:dev",
     "@types/node": "catalog:dev",
     "@unocss/eslint-plugin": "catalog:peer",
+    "baseline-browser-mapping": "catalog:dev",
     "bumpp": "catalog:dev",
     "eslint": "catalog:peer",
     "eslint-plugin-better-tailwindcss": "catalog:peer",
     "eslint-plugin-erasable-syntax-only": "catalog:peer",
     "eslint-plugin-format": "catalog:peer",
     "eslint-plugin-jsx-a11y": "catalog:peer",
-    "eslint-plugin-react-hooks": "catalog:peer",
     "eslint-plugin-react-refresh": "catalog:peer",
     "eslint-plugin-vue": "catalog:peer",
     "eslint-plugin-vuejs-accessibility": "catalog:peer",
@@ -173,7 +159,6 @@
     "tsdown": "catalog:dev",
     "tsx": "catalog:dev",
     "typescript": "catalog:dev",
-    "vitest": "catalog:dev",
     "vue": "catalog:peer",
     "vue-eslint-parser": "catalog:peer"
   },
@@ -188,24 +173,24 @@
     "tsx": "catalog:dev"
   },
   "simple-git-hooks": {
-    "pre-commit": "npx lint-staged",
-    "commit-msg": "npx --no -- commitlint --edit `$1`"
+    "pre-commit": "nlx lint-staged",
+    "commit-msg": "nlx commitlint --edit `$1`"
   },
   "lint-staged": {
     "*": "eslint --fix"
   },
   "inlinedDependencies": {
-    "find-up-simple": "1.0.1",
+    "@eslint-community/eslint-utils": "4.9.1",
+    "@typescript-eslint/scope-manager": "8.59.2",
+    "@typescript-eslint/types": "8.59.2",
+    "@typescript-eslint/utils": "8.59.2",
+    "@typescript-eslint/visitor-keys": "8.59.2",
+    "cached-factory": "0.2.0",
+    "eslint-plugin-erasable-syntax-only": "0.4.1",
     "eslint-visitor-keys": [
       "3.4.3",
       "5.0.1"
     ],
-    "@eslint-community/eslint-utils": "4.9.1",
-    "@typescript-eslint/utils": "8.57.0",
-    "@typescript-eslint/types": "8.57.0",
-    "@typescript-eslint/visitor-keys": "8.57.0",
-    "@typescript-eslint/scope-manager": "8.57.0",
-    "eslint-plugin-erasable-syntax-only": "0.4.0",
-    "cached-factory": "0.1.0"
+    "find-up-simple": "1.0.1"
   }
 }

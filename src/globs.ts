@@ -10,6 +10,7 @@ export const GLOB_TSX = '**/*.?([cm])tsx'
 export const GLOB_STYLE = '**/*.{c,le,sc}ss'
 export const GLOB_CSS = '**/*.css'
 export const GLOB_POSTCSS = '**/*.{p,post}css'
+export const GLOB_LESS = '**/*.less'
 export const GLOB_SCSS = '**/*.scss'
 
 export const GLOB_JSON = '**/*.json'
@@ -24,6 +25,7 @@ export const GLOB_TOML = '**/*.toml'
 export const GLOB_XML = '**/*.xml'
 export const GLOB_SVG = '**/*.svg'
 export const GLOB_HTML = '**/*.htm?(l)'
+export const GLOB_GRAPHQL = '**/*.{g,graph}ql'
 
 export const GLOB_MARKDOWN_CODE = `${GLOB_MARKDOWN}/${GLOB_SRC}`
 
@@ -41,6 +43,7 @@ export const GLOB_ALL_SRC = [
   GLOB_JSON,
   GLOB_JSON5,
   GLOB_MARKDOWN,
+  GLOB_VUE,
   GLOB_YAML,
   GLOB_XML,
   GLOB_HTML,
@@ -72,12 +75,20 @@ export const GLOB_EXCLUDE = [
   '**/.output',
   '**/.vite-inspect',
   '**/.yarn',
-  '**/vite.config.*.timestamp-*',
 
   '**/CHANGELOG*.md',
-  '**/*.min.*',
   '**/LICENSE*',
+  '**/*.min.*',
   '**/__snapshots__',
+
+  // Tools temp files
+  '**/vite.config.*.timestamp-*',
   '**/auto-import?(s).d.ts',
   '**/components.d.ts',
+
+  // AI related
+  '**/.context',
+  '**/.claude',
+  '**/.agents',
+  '**/.*/skills',
 ]

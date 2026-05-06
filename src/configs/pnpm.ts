@@ -1,7 +1,5 @@
 import type { OptionsPnpm, TypedFlatConfigItem } from '../types'
-
 import fs from 'node:fs/promises'
-
 import { findUp } from 'find-up-simple'
 
 import { interopDefault } from '../utils'

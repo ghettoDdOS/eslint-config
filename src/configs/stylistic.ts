@@ -1,9 +1,4 @@
-import type {
-  OptionsOverrides,
-  StylisticConfig,
-  TypedFlatConfigItem,
-} from '../types'
-
+import type { OptionsOverrides, StylisticConfig, TypedFlatConfigItem } from '../types'
 import { pluginAntfu } from '../plugins'
 import { interopDefault } from '../utils'
 
@@ -11,11 +6,15 @@ export const StylisticConfigDefaults: StylisticConfig = {
   experimental: false,
   indent: 2,
   jsx: true,
+  printWidth: 100,
   quotes: 'single',
   semi: false,
+  tabWidth: 4,
 }
 
-export interface StylisticOptions extends StylisticConfig, OptionsOverrides {}
+export interface StylisticOptions extends StylisticConfig, OptionsOverrides {
+  lessOpinionated?: boolean
+}
 
 export async function stylistic(
   options: StylisticOptions = {},
@@ -24,17 +23,18 @@ export async function stylistic(
     experimental,
     indent,
     jsx,
+    lessOpinionated = false,
     overrides = {},
+    printWidth,
     quotes,
     semi,
+    tabWidth,
   } = {
     ...StylisticConfigDefaults,
     ...options,
   }
 
-  const pluginStylistic = await interopDefault(
-    import('@stylistic/eslint-plugin'),
-  )
+  const pluginStylistic = await interopDefault(import('@stylistic/eslint-plugin'))
 
   const config = pluginStylistic.configs.customize({
     experimental,
@@ -63,13 +63,28 @@ export async function stylistic(
 
         'antfu/consistent-chaining': 'error',
 
-        'antfu/curly': 'error',
-        'antfu/if-newline': 'error',
-        'antfu/top-level-function': 'error',
+        ...(lessOpinionated
+          ? {
+              curly: ['error', 'all'],
+            }
+          : {
+              'antfu/curly': 'error',
+              'antfu/if-newline': 'error',
+              'antfu/top-level-function': 'error',
+            }
+        ),
 
-        'style/generator-star-spacing': [
-          'error',
-          { after: true, before: false },
+        'style/generator-star-spacing': ['error', { after: true, before: false }],
+        'style/max-len': [
+          'warn',
+          {
+            code: printWidth,
+            ignoreComments: true,
+            ignoreRegExpLiterals: true,
+            ignoreTrailingComments: true,
+            ignoreUrls: true,
+            tabWidth: typeof indent === 'number' ? indent : indent === 'tab' ? tabWidth : 2,
+          },
         ],
         'style/yield-star-spacing': ['error', { after: true, before: false }],
 

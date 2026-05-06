@@ -6,12 +6,8 @@ import type {
 } from '../types'
 
 import { mergeProcessors, processorPassThrough } from 'eslint-merge-processors'
+import { GLOB_MARKDOWN, GLOB_MARKDOWN_CODE, GLOB_MARKDOWN_IN_MARKDOWN } from '../globs'
 
-import {
-  GLOB_MARKDOWN,
-  GLOB_MARKDOWN_CODE,
-  GLOB_MARKDOWN_IN_MARKDOWN,
-} from '../globs'
 import { interopDefault } from '../utils'
 
 export async function markdown(
@@ -42,7 +38,7 @@ export async function markdown(
       // but not the markdown file itself. We use `eslint-merge-processors` to
       // add a pass-through processor for the markdown file itself.
       processor: mergeProcessors([
-        markdown.processors.markdown,
+        markdown.processors!.markdown,
         processorPassThrough,
       ]),
     },
@@ -60,22 +56,6 @@ export async function markdown(
         // https://github.com/eslint/markdown/issues/294
         'markdown/no-missing-label-refs': 'off',
         ...overridesMarkdown,
-      },
-    },
-    {
-      files,
-      name: 'markdown/disables/markdown',
-      rules: {
-        // Disable rules do not work with markdown sourcecode.
-        'command/command': 'off',
-        'no-irregular-whitespace': 'off',
-        'perfectionist/sort-exports': 'off',
-        'perfectionist/sort-imports': 'off',
-        'regexp/no-legacy-features': 'off',
-        'regexp/no-missing-g-flag': 'off',
-        'regexp/no-useless-dollar-replacements': 'off',
-        'regexp/no-useless-flag': 'off',
-        'style/indent': 'off',
       },
     },
     {
@@ -103,7 +83,6 @@ export async function markdown(
         'no-restricted-syntax': 'off',
         'no-undef': 'off',
         'no-unused-expressions': 'off',
-
         'no-unused-labels': 'off',
 
         'no-unused-vars': 'off',

@@ -8,12 +8,15 @@ import type {
 } from '../types'
 
 import { mergeProcessors } from 'eslint-merge-processors'
-
 import { GLOB_VUE } from '../globs'
 import { ensurePackages, interopDefault } from '../utils'
 
 export async function vue(
-  options: OptionsVue & OptionsHasTypeScript & OptionsOverrides & OptionsStylistic & OptionsFiles = {},
+  options: OptionsVue
+    & OptionsHasTypeScript
+    & OptionsOverrides
+    & OptionsStylistic
+    & OptionsFiles = {},
 ): Promise<TypedFlatConfigItem[]> {
   const {
     a11y = false,
@@ -30,12 +33,6 @@ export async function vue(
   const {
     indent = 2,
   } = typeof stylistic === 'boolean' ? {} : stylistic
-
-  await ensurePackages([
-    'eslint-plugin-vue',
-    'vue-eslint-parser',
-    'eslint-processor-vue-blocks',
-  ])
 
   if (a11y) {
     await ensurePackages([
@@ -121,9 +118,15 @@ export async function vue(
               ...pluginVue.configs['vue2-recommended'].rules as any,
             }
           : {
-              ...pluginVue.configs['flat/essential'].map(c => c.rules).reduce((acc, c) => ({ ...acc, ...c }), {}) as any,
-              ...pluginVue.configs['flat/strongly-recommended'].map(c => c.rules).reduce((acc, c) => ({ ...acc, ...c }), {}) as any,
-              ...pluginVue.configs['flat/recommended'].map(c => c.rules).reduce((acc, c) => ({ ...acc, ...c }), {}) as any,
+              ...pluginVue.configs['flat/essential']
+                .map(c => c.rules)
+                .reduce((acc, c) => ({ ...acc, ...c }), {}) as any,
+              ...pluginVue.configs['flat/strongly-recommended']
+                .map(c => c.rules)
+                .reduce((acc, c) => ({ ...acc, ...c }), {}) as any,
+              ...pluginVue.configs['flat/recommended']
+                .map(c => c.rules)
+                .reduce((acc, c) => ({ ...acc, ...c }), {}) as any,
             },
 
         'antfu/no-top-level-await': 'off',

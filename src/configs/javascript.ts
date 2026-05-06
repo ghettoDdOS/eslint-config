@@ -1,8 +1,4 @@
-import type {
-  OptionsIsInEditor,
-  OptionsOverrides,
-  TypedFlatConfigItem,
-} from '../types'
+import type { OptionsIsInEditor, OptionsOverrides, TypedFlatConfigItem } from '../types'
 
 import globals from 'globals'
 
@@ -11,7 +7,10 @@ import { pluginAntfu, pluginUnusedImports } from '../plugins'
 export async function javascript(
   options: OptionsIsInEditor & OptionsOverrides = {},
 ): Promise<TypedFlatConfigItem[]> {
-  const { isInEditor = false, overrides = {} } = options
+  const {
+    isInEditor = false,
+    overrides = {},
+  } = options
 
   return [
     {
@@ -46,10 +45,7 @@ export async function javascript(
         'unused-imports': pluginUnusedImports,
       },
       rules: {
-        'accessor-pairs': [
-          'error',
-          { enforceForClassMembers: true, setWithoutGet: true },
-        ],
+        'accessor-pairs': ['error', { enforceForClassMembers: true, setWithoutGet: true }],
 
         'antfu/no-top-level-await': 'error',
 
@@ -59,10 +55,7 @@ export async function javascript(
         'default-case-last': 'error',
         'dot-notation': ['error', { allowKeywords: true }],
         'eqeqeq': ['error', 'smart'],
-        'new-cap': [
-          'error',
-          { capIsNew: false, newIsCap: true, properties: true },
-        ],
+        'new-cap': ['error', { capIsNew: false, newIsCap: true, properties: true }],
         'no-alert': 'error',
         'no-array-constructor': 'error',
         'no-async-promise-executor': 'error',
@@ -120,8 +113,7 @@ export async function javascript(
         'no-restricted-properties': [
           'error',
           {
-            message:
-              'Use `Object.getPrototypeOf` or `Object.setPrototypeOf` instead.',
+            message: 'Use `Object.getPrototypeOf` or `Object.setPrototypeOf` instead.',
             property: '__proto__',
           },
           {
@@ -163,27 +155,18 @@ export async function javascript(
         'no-unreachable-loop': 'error',
         'no-unsafe-finally': 'error',
         'no-unsafe-negation': 'error',
-        'no-unused-expressions': [
-          'error',
-          {
-            allowShortCircuit: true,
-            allowTaggedTemplates: true,
-            allowTernary: true,
-          },
-        ],
-        'no-unused-vars': [
-          'error',
-          {
-            args: 'none',
-            caughtErrors: 'none',
-            ignoreRestSiblings: true,
-            vars: 'all',
-          },
-        ],
-        'no-use-before-define': [
-          'error',
-          { classes: false, functions: false, variables: true },
-        ],
+        'no-unused-expressions': ['error', {
+          allowShortCircuit: true,
+          allowTaggedTemplates: true,
+          allowTernary: true,
+        }],
+        'no-unused-vars': ['error', {
+          args: 'none',
+          caughtErrors: 'none',
+          ignoreRestSiblings: true,
+          vars: 'all',
+        }],
+        'no-use-before-define': ['error', { classes: false, functions: false, variables: true }],
         'no-useless-backreference': 'error',
         'no-useless-call': 'error',
         'no-useless-catch': 'error',
@@ -235,10 +218,7 @@ export async function javascript(
             varsIgnorePattern: '^_',
           },
         ],
-        'use-isnan': [
-          'error',
-          { enforceForIndexOf: true, enforceForSwitchCase: true },
-        ],
+        'use-isnan': ['error', { enforceForIndexOf: true, enforceForSwitchCase: true }],
         'valid-typeof': ['error', { requireStringLiterals: true }],
         'vars-on-top': 'error',
         'yoda': ['error', 'never'],

@@ -17,7 +17,9 @@ export async function jsonc(
     stylistic = true,
   } = options
 
-  const { indent = 2 } = typeof stylistic === 'boolean' ? {} : stylistic
+  const {
+    indent = 2,
+  } = typeof stylistic === 'boolean' ? {} : stylistic
 
   const pluginJsonc = await interopDefault(import('eslint-plugin-jsonc'))
 
@@ -25,7 +27,7 @@ export async function jsonc(
     {
       name: 'jsonc/setup',
       plugins: {
-        jsonc: pluginJsonc,
+        jsonc: pluginJsonc as any,
       },
     },
     {
@@ -60,29 +62,23 @@ export async function jsonc(
         'jsonc/valid-json-number': 'error',
         'jsonc/vue-custom-block/no-parsing-error': 'error',
 
-        ...(stylistic
+        ...stylistic
           ? {
               'jsonc/array-bracket-spacing': ['error', 'never'],
               'jsonc/comma-dangle': ['error', 'never'],
               'jsonc/comma-style': ['error', 'last'],
-              'jsonc/indent': ['error', typeof indent === 'number' ? indent : indent === 'tab' ? 'tab' : 2],
-              'jsonc/key-spacing': [
+              'jsonc/indent': [
                 'error',
-                { afterColon: true, beforeColon: false },
+                typeof indent === 'number' ? indent : indent === 'tab' ? 'tab' : 2,
               ],
-              'jsonc/object-curly-newline': [
-                'error',
-                { consistent: true, multiline: true },
-              ],
+              'jsonc/key-spacing': ['error', { afterColon: true, beforeColon: false }],
+              'jsonc/object-curly-newline': ['error', { consistent: true, multiline: true }],
               'jsonc/object-curly-spacing': ['error', 'always'],
-              'jsonc/object-property-newline': [
-                'error',
-                { allowAllPropertiesOnSameLine: true },
-              ],
+              'jsonc/object-property-newline': ['error', { allowAllPropertiesOnSameLine: true }],
               'jsonc/quote-props': 'error',
               'jsonc/quotes': 'error',
             }
-          : {}),
+          : {},
 
         ...overrides,
       },

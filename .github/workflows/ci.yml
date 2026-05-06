@@ -23,14 +23,17 @@ jobs:
         with:
           node-version: lts/*
 
+      - name: Setup
+        run: npm i -g @antfu/ni
+
       - name: Install
-        run: pnpm install
+        run: nci
 
       - name: Build
-        run: pnpm build
+        run: nr build
 
       - name: Lint
-        run: pnpm lint
+        run: nr lint
 
       - name: Typecheck
-        run: pnpm typecheck
+        run: nr typecheck

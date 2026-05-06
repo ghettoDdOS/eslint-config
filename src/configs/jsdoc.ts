@@ -1,6 +1,6 @@
 import type { OptionsStylistic, TypedFlatConfigItem } from '../types'
-import { GLOB_SRC } from '../globs'
 
+import { GLOB_SRC } from '../globs'
 import { interopDefault } from '../utils'
 
 export async function jsdoc(options: OptionsStylistic = {}): Promise<TypedFlatConfigItem[]> {

@@ -1,4 +1,9 @@
-import type { OptionsFiles, OptionsIsInEditor, OptionsOverrides, TypedFlatConfigItem } from '../types'
+import type {
+  OptionsFiles,
+  OptionsIsInEditor,
+  OptionsOverrides,
+  TypedFlatConfigItem,
+} from '../types'
 
 import { GLOB_TESTS } from '../globs'
 import { interopDefault } from '../utils'
@@ -55,6 +60,7 @@ export async function test(
         // Disables
         ...{
           'antfu/no-top-level-await': 'off',
+          'baseline-js/use-baseline': 'off',
           'e18e/prefer-static-regex': 'off',
           'no-unused-expressions': 'off',
           'node/prefer-global/process': 'off',

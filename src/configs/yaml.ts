@@ -4,19 +4,28 @@ import type {
   OptionsStylistic,
   TypedFlatConfigItem,
 } from '../types'
-
 import { GLOB_YAML } from '../globs'
+
 import { interopDefault } from '../utils'
 
 export async function yaml(
   options: OptionsOverrides & OptionsStylistic & OptionsFiles = {},
 ): Promise<TypedFlatConfigItem[]> {
-  const { files = [GLOB_YAML], overrides = {}, stylistic = true } = options
+  const {
+    files = [GLOB_YAML],
+    overrides = {},
+    stylistic = true,
+  } = options
 
-  const { indent = 2, quotes = 'single' }
-    = typeof stylistic === 'boolean' ? {} : stylistic
+  const {
+    indent = 2,
+    quotes = 'single',
+  } = typeof stylistic === 'boolean' ? {} : stylistic
 
-  const [pluginYaml, parserYaml] = await Promise.all([
+  const [
+    pluginYaml,
+    parserYaml,
+  ] = await Promise.all([
     interopDefault(import('eslint-plugin-yml')),
     interopDefault(import('yaml-eslint-parser')),
   ] as const)
@@ -46,7 +55,7 @@ export async function yaml(
 
         'yaml/vue-custom-block/no-parsing-error': 'error',
 
-        ...(stylistic
+        ...stylistic
           ? {
               'yaml/block-mapping-question-indicator-newline': 'error',
               'yaml/block-sequence-hyphen-indicator-newline': 'error',
@@ -59,14 +68,11 @@ export async function yaml(
               'yaml/no-tab-indent': 'error',
               'yaml/quotes': [
                 'error',
-                {
-                  avoidEscape: true,
-                  prefer: quotes === 'backtick' ? 'single' : quotes,
-                },
+                { avoidEscape: true, prefer: quotes === 'backtick' ? 'single' : quotes },
               ],
               'yaml/spaced-comment': 'error',
             }
-          : {}),
+          : {},
 
         ...overrides,
       },

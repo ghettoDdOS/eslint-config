@@ -1,5 +1,4 @@
 import type { OptionsOverrides, OptionsStylistic, TypedFlatConfigItem } from '../types'
-
 import { pluginAntfu, pluginImportLite } from '../plugins'
 
 export async function imports(
@@ -28,11 +27,11 @@ export async function imports(
         'import/no-mutable-exports': 'error',
         'import/no-named-default': 'error',
 
-        ...(stylistic
+        ...stylistic
           ? {
               'import/newline-after-import': ['error', { count: 1 }],
             }
-          : {}),
+          : {},
 
         ...overrides,
       },

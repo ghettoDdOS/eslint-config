@@ -1,7 +1,14 @@
 import type { OptionsFiles, OptionsOverrides, TypedFlatConfigItem } from '../types'
-
 import { GLOB_SRC } from '../globs'
 import { ensurePackages, interopDefault } from '../utils'
+
+function normalizeRules(rules: Record<string, any>): Record<string, any> {
+  return Object.fromEntries(
+    Object.entries(rules).map(([key, value]) =>
+      [key, typeof value === 'string' ? [value] : value],
+    ),
+  )
+}
 
 export async function nextjs(
   options: OptionsOverrides & OptionsFiles = {},
@@ -11,13 +18,25 @@ export async function nextjs(
     overrides = {},
   } = options
 
-  await ensurePackages(['@next/eslint-plugin-next'])
+  await ensurePackages([
+    '@next/eslint-plugin-next',
+  ])
 
   const pluginNextJS = await interopDefault(import('@next/eslint-plugin-next'))
 
+  function getRules(name: keyof typeof pluginNextJS.configs): Record<string, any> {
+    const rules = pluginNextJS.configs?.[name]?.rules
+    if (!rules) {
+      throw new Error(
+        `[@ghettoddos/eslint-config] Failed to find config ${name} in @next/eslint-plugin-next`,
+      )
+    }
+    return normalizeRules(rules)
+  }
+
   return [
     {
-      name: 'next/setup',
+      name: 'nextjs/setup',
       plugins: {
         next: pluginNextJS,
       },
@@ -32,30 +51,14 @@ export async function nextjs(
         },
         sourceType: 'module',
       },
-      name: 'next/rules',
+      name: 'nextjs/rules',
       rules: {
-        'next/google-font-display': 'warn',
-        'next/google-font-preconnect': 'warn',
-        'next/inline-script-id': 'error',
-        'next/next-script-for-ga': 'warn',
-        'next/no-assign-module-variable': 'error',
-        'next/no-async-client-component': 'warn',
-        'next/no-before-interactive-script-outside-document': 'warn',
-        'next/no-css-tags': 'warn',
-        'next/no-document-import-in-page': 'error',
-        'next/no-duplicate-head': 'error',
-        'next/no-head-element': 'warn',
-        'next/no-head-import-in-document': 'error',
-        'next/no-html-link-for-pages': 'warn',
-        'next/no-img-element': 'warn',
-        'next/no-page-custom-font': 'warn',
-        'next/no-script-component-in-head': 'error',
-        'next/no-styled-jsx-in-document': 'warn',
-        'next/no-sync-scripts': 'warn',
-        'next/no-title-in-document-head': 'warn',
-        'next/no-typos': 'warn',
-        'next/no-unwanted-polyfillio': 'warn',
+        ...getRules('recommended'),
+        ...getRules('core-web-vitals'),
 
+        'node/prefer-global/process': 'off',
+
+        // overrides
         ...overrides,
       },
       settings: {

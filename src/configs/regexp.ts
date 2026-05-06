@@ -1,8 +1,4 @@
-import type {
-  OptionsOverrides,
-  OptionsRegExp,
-  TypedFlatConfigItem,
-} from '../types'
+import type { OptionsOverrides, OptionsRegExp, TypedFlatConfigItem } from '../types'
 
 import { configs } from 'eslint-plugin-regexp'
 
@@ -17,9 +13,8 @@ export async function regexp(
 
   if (options.level === 'warn') {
     for (const key in rules) {
-      if (rules[key] === 'error') {
+      if (rules[key] === 'error')
         rules[key] = 'warn'
-      }
     }
   }
 

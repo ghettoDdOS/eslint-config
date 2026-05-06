@@ -1,28 +1,19 @@
-import type {
-  OptionsFormatters,
-  StylisticConfig,
-  TypedFlatConfigItem,
-} from '../types'
-import type {
-  VendoredPrettierOptions,
-  VendoredPrettierRuleOptions,
-} from '../vendor/prettier-types'
+import type { OptionsFormatters, StylisticConfig, TypedFlatConfigItem } from '../types'
+import type { VendoredPrettierOptions, VendoredPrettierRuleOptions } from '../vendor/prettier-types'
 
 import {
   GLOB_CSS,
+  GLOB_GRAPHQL,
   GLOB_HTML,
+  GLOB_LESS,
   GLOB_MARKDOWN,
   GLOB_POSTCSS,
   GLOB_SCSS,
   GLOB_SVG,
   GLOB_XML,
 } from '../globs'
-import {
-  ensurePackages,
-  interopDefault,
-  isPackageInScope,
-  parserPlain,
-} from '../utils'
+
+import { ensurePackages, interopDefault, isPackageInScope, parserPlain } from '../utils'
 import { StylisticConfigDefaults } from './stylistic'
 
 function mergePrettierOptions(
@@ -32,7 +23,10 @@ function mergePrettierOptions(
   return {
     ...options,
     ...overrides,
-    plugins: [...(overrides.plugins || []), ...(options.plugins || [])],
+    plugins: [
+      ...(overrides.plugins || []),
+      ...(options.plugins || []),
+    ],
   }
 }
 
@@ -44,6 +38,7 @@ export async function formatters(
     const isPrettierPluginXmlInScope = isPackageInScope('@prettier/plugin-xml')
     options = {
       css: true,
+      graphql: true,
       html: true,
       markdown: true,
       svg: isPrettierPluginXmlInScope,
@@ -53,10 +48,15 @@ export async function formatters(
 
   await ensurePackages([
     'eslint-plugin-format',
-    options.xml || options.svg ? '@prettier/plugin-xml' : undefined,
+    (options.xml || options.svg) ? '@prettier/plugin-xml' : undefined,
   ])
 
-  const { indent, quotes, semi } = {
+  const {
+    indent,
+    printWidth,
+    quotes,
+    semi,
+  } = {
     ...StylisticConfigDefaults,
     ...stylistic,
   }
@@ -64,7 +64,7 @@ export async function formatters(
   const prettierOptions: VendoredPrettierOptions = Object.assign(
     {
       endOfLine: 'auto',
-      printWidth: 120,
+      printWidth: typeof printWidth === 'number' ? printWidth : 100,
       semi,
       singleQuote: quotes === 'single',
       tabWidth: typeof indent === 'number' ? indent : 2,
@@ -124,6 +124,21 @@ export async function formatters(
           ],
         },
       },
+      {
+        files: [GLOB_LESS],
+        languageOptions: {
+          parser: parserPlain,
+        },
+        name: 'formatter/less',
+        rules: {
+          'format/prettier': [
+            'error',
+            mergePrettierOptions(prettierOptions, {
+              parser: 'less',
+            }),
+          ],
+        },
+      },
     )
   }
 
@@ -155,13 +170,12 @@ export async function formatters(
       rules: {
         'format/prettier': [
           'error',
-          mergePrettierOptions(
-            { ...prettierXmlOptions, ...prettierOptions },
-            {
-              parser: 'xml',
-              plugins: ['@prettier/plugin-xml'],
-            },
-          ),
+          mergePrettierOptions({ ...prettierXmlOptions, ...prettierOptions }, {
+            parser: 'xml',
+            plugins: [
+              '@prettier/plugin-xml',
+            ],
+          }),
         ],
       },
     })
@@ -176,13 +190,12 @@ export async function formatters(
       rules: {
         'format/prettier': [
           'error',
-          mergePrettierOptions(
-            { ...prettierXmlOptions, ...prettierOptions },
-            {
-              parser: 'xml',
-              plugins: ['@prettier/plugin-xml'],
-            },
-          ),
+          mergePrettierOptions({ ...prettierXmlOptions, ...prettierOptions }, {
+            parser: 'xml',
+            plugins: [
+              '@prettier/plugin-xml',
+            ],
+          }),
         ],
       },
     })
@@ -201,6 +214,24 @@ export async function formatters(
           mergePrettierOptions(prettierOptions, {
             embeddedLanguageFormatting: 'off',
             parser: 'markdown',
+          }),
+        ],
+      },
+    })
+  }
+
+  if (options.graphql) {
+    configs.push({
+      files: [GLOB_GRAPHQL],
+      languageOptions: {
+        parser: parserPlain,
+      },
+      name: 'formatter/graphql',
+      rules: {
+        'format/prettier': [
+          'error',
+          mergePrettierOptions(prettierOptions, {
+            parser: 'graphql',
           }),
         ],
       },
