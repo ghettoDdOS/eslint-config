@@ -157,6 +157,7 @@
     "pnpm-workspace-yaml": "catalog:dev",
     "simple-git-hooks": "catalog:dev",
     "tsdown": "catalog:dev",
+    "tsdown-stale-guard": "catalog:dev",
     "tsx": "catalog:dev",
     "typescript": "catalog:dev",
     "vue": "catalog:peer",
@@ -173,8 +174,8 @@
     "tsx": "catalog:dev"
   },
   "simple-git-hooks": {
-    "pre-commit": "nlx lint-staged",
-    "commit-msg": "nlx commitlint --edit `$1`"
+    "pre-commit": "npx lint-staged",
+    "commit-msg": "npx --no -- commitlint --edit $1"
   },
   "lint-staged": {
     "*": "eslint --fix"

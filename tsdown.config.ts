@@ -1,4 +1,5 @@
 import { defineConfig } from 'tsdown'
+import { StaleGuardRecorder } from 'tsdown-stale-guard'
 
 export default defineConfig({
   entry: [
@@ -8,4 +9,5 @@ export default defineConfig({
   shims: true,
   format: ['esm'],
   exports: true,
+  plugins: [StaleGuardRecorder()],
 })

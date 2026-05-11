@@ -231,7 +231,10 @@ export interface OptionsStylistic {
 }
 
 export interface StylisticConfig
-  extends Pick<StylisticCustomizeOptions, 'indent' | 'quotes' | 'jsx' | 'semi' | 'experimental'> {
+  extends Pick<
+    StylisticCustomizeOptions,
+'indent' | 'quotes' | 'jsx' | 'semi' | 'braceStyle' | 'experimental'
+  > {
   /**
    * Specify the maximum line length.
    * @default 100
@@ -450,6 +453,13 @@ export interface OptionsConfig extends OptionsComponentExts, OptionsProjectType 
    * @default true
    */
   unicorn?: boolean | OptionsUnicorn
+
+  /**
+   * Options for eslint-plugin-perfectionist.
+   *
+   * @default true
+   */
+  perfectionist?: boolean | OptionsOverrides
 
   /**
    * Options for eslint-plugin-import-lite.

@@ -18,6 +18,7 @@ export default config(
       },
     },
     formatters: true,
+    perfectionist: true,
     pnpm: true,
     type: 'lib',
     jsx: {
