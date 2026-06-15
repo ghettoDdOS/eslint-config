@@ -11,7 +11,7 @@ catalogs:
   dev:
     '@antfu/ni': ^30.1.0
     '@commitlint/cli': ^20.5.3
-    '@commitlint/config-conventional': ^20.5.3
+    '@commitlint/config-conventional': ^21.0.2
     '@eslint/config-inspector': ^2.0.0
     '@types/eslint-plugin-jsx-a11y': ^6.10.1
     '@types/node': ^25.6.0
